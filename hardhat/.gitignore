@@ -1,4 +1,7 @@
+# Node modules
 node_modules
+
+# Environment variables
 .env
 
 # Hardhat files
@@ -9,7 +12,7 @@ node_modules
 /typechain
 /typechain-types
 
-# solidity-coverage files
+# Solidity-coverage files
 /coverage
 /coverage.json
 

@@ -8,23 +8,23 @@ contract Process{
     using MessageHashUtils for bytes;
 
     mapping(address => bytes32[]) public transactions;
-    function verifySignature(bytes32 _message, bytes memory _signature,address signer)
-    external
-    pure
-    returns(bool){
-        //签名验证
-        bytes32 messageHash =toEthSignedMessageHash(_message);
-        address _signer =messageHash.recover(_signature);
-        return signer ==_signer;
-    }
+    // function verifySignature(bytes32 _message, bytes memory _signature,address signer)
+    // external
+    // pure
+    // returns(bool){
+    //     //签名验证
+    //     bytes32 messageHash =toEthSignedMessageHash(_message);
+    //     address _signer =messageHash.recover(_signature);
+    //     return signer ==_signer;
+    // }
 
-    function toEthSignedMessageHash(bytes32 _message)
-     internal
-     pure 
-     returns (bytes32) {
-        // 生成以太坊签名消息的哈希
-        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _message));
-    }
+    // function toEthSignedMessageHash(bytes32 _message)
+    //  internal
+    //  pure 
+    //  returns (bytes32) {
+    //     // 生成以太坊签名消息的哈希
+    //     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _message));
+    // }
 
     function storeTransaction(address _sender,bytes32 _transaction)
     external{
