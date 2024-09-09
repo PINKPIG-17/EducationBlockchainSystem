@@ -84,6 +84,7 @@ async function connectMetamask() {
     return provider.getSigner()
 }
 //获取数据摘要
+//接受一个string类型，返回bytes32类型
 function hashData(data){
     return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data))
 }
@@ -111,8 +112,10 @@ async function storeTransaction(contract,account,transactionHash) {
 
 async function main() {
     const signer = await connectMetamask()
-    // const account =await signer.getAddress()
-
+    const account =await signer.getAddress()
+    
+    //获取的message需转换为string类型
+    //pubkey为地址类型
     const message =document.getElementById('messageInput').value
     const userPublicKey =document.getElementById('publicKeyInput').value
 
@@ -122,7 +125,7 @@ async function main() {
     const signature =await signMessage(hashedData,signer)
     console.log(`签名完成！`)
 
-    const isRightSign =await verifySignature(hashedData,signature,signer)
+    const isRightSign =await verifySignature(hashedData,signature,account)
     if(isRightSign){
         console.log(`签名验证通过！`)
     }else{
