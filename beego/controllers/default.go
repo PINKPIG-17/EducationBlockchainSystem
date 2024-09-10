@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"beego/service"
+	"encoding/json"
 
 	beego "github.com/beego/beego/v2/server/web"
 )
@@ -20,21 +21,18 @@ func (c *MainController) Login() {
 	var user service.User
 
 	// 从请求体中解析数据
-	if err := c.ParseForm(&user); err != nil {
+	if err := json.NewDecoder(c.Ctx.Request.Body).Decode(&user); err != nil {
 		c.Ctx.Output.SetStatus(400)
 		c.Ctx.WriteString("Invalid data")
 		return
 	}
-
 	// 处理用户数据，例如打印用户名和密码
 	if service.ValidateUser(&user) {
-		c.Data["json"] = map[string]string{"status": "success"}
+		c.Ctx.Output.SetStatus(200) //success
 		c.ServeJSON()
-		c.ToHomePage()
 	} else {
-		c.Data["json"] = map[string]string{"status": "false"}
+		c.Ctx.Output.SetStatus(401) //unauthorized
 		c.ServeJSON()
-		c.Index()
 	}
 
 }
@@ -47,21 +45,18 @@ func (c *MainController) Register() {
 	var user service.User
 
 	// 从请求体中解析数据
-	if err := c.ParseForm(&user); err != nil {
+	if err := json.NewDecoder(c.Ctx.Request.Body).Decode(&user); err != nil {
 		c.Ctx.Output.SetStatus(400)
 		c.Ctx.WriteString("Invalid data")
 		return
 	}
-
 	// 处理用户数据，例如打印用户名和密码
 	if service.ConstructUser(&user) {
-		c.Data["json"] = map[string]string{"status": "success"}
+		c.Ctx.Output.SetStatus(200)
 		c.ServeJSON()
-		c.ToHomePage()
 	} else {
-		c.Data["json"] = map[string]string{"status": "false"}
+		c.Ctx.Output.SetStatus(401)
 		c.ServeJSON()
-		c.Redirect("/user/toRegister", 302)
 	}
 }
 

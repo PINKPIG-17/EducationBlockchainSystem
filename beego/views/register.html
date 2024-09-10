@@ -124,18 +124,16 @@
             },
             body: JSON.stringify(registData)
         })
-        .then(response => response.json())
-        .then(data => {
-            // 处理注册成功的响应
-            console.log(data);
-            alert("注册成功");
+        .then(response => {
+        if (response.ok) {
+            alert("注册成功!");
+            window.location.href = "/homePage";
+        } else {
+            alert("Registration Error");
+            window.location.href = "/user/toRegister";
+        }
         })
-        .catch(error => {
-            // 处理注册失败的错误
-            console.error('Error:', error);
-            alert("注册失败");
-        });
-    });
+        .catch(error => console.error('Error:', error));})
 </script>
 </body>
 </html>
