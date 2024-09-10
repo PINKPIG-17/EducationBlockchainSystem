@@ -1,7 +1,7 @@
-const  ethers=require("ethers")
+import { ethers } from 'https://cdn.ethers.io/lib/ethers-5.2.umd.min.js';
 
 const contractAddress ='0xABe0Bd8eF2989479F36B43848C4F94a2c3578Db9'
-const provider = new ethers.JsonRpcProvider('https://eth-sepolia.alchemyapi.io/v2/U0dK0spERJyBbs8DILZ643QoBe2WbHKg')
+const jsonRpcProvider  = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/U0dK0spERJyBbs8DILZ643QoBe2WbHKg')
 const contractAbi =[{
   "_format": "hh-sol-artifact-1",
   "contractName": "Process",
@@ -77,11 +77,18 @@ const contractAbi =[{
 ]
 //连接metamask
 async function connectMetamask() {
-    const provider =new ethers.providers.Web3Provider(window.ethereum)
+    if(window.ethereum)
+    {const provider =new ethers.providers.Web3Provider(window.ethereum)
+    try{
 
-    await provider.send('eth_requestAccount',[])
-
-    return provider.getSigner()
+      await provider.send('eth_requestAccounts',[])
+      return provider.getSigner()
+    }catch (error){
+      console.log(`用户拒绝连接 MetaMask`)
+    }
+  }else{
+    console.error(`MetaMask未安装`)
+  }
 }
 //获取数据摘要
 //接受一个string类型，返回bytes32类型
@@ -113,7 +120,7 @@ async function storeTransaction(contract,account,transactionHash) {
 async function main() {
     const signer = await connectMetamask()
     const account =await signer.getAddress()
-    
+
     //获取的message需转换为string类型
     //pubkey为地址类型
     const message =document.getElementById('messageInput').value
@@ -156,4 +163,8 @@ async function main() {
 
 document.getElementById('submitBtn').addEventListener('click', async () => {
     await main();
+});
+
+window.addEventListener('load', async () => {
+  await connectMetamask() // 自动连接 MetaMask
 });

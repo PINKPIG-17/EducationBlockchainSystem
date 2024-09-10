@@ -1,0 +1,299 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>签名测试</title>-->
+<!--    &lt;!&ndash; 从 CDN 加载 ethers.js &ndash;&gt;-->
+<!--    <script-->
+<!--            src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"-->
+<!--            type="application/javascript"-->
+<!--    ></script>-->
+<!--    &lt;!&ndash; 添加自己的 JavaScript 代码 &ndash;&gt;-->
+<!--    <script>-->
+<!--        // 定义 JavaScript 代码-->
+<!--        async function connectMetamask() {-->
+<!--            if (window.ethereum) {-->
+<!--                const provider = new ethers.providers.Web3Provider(window.ethereum);-->
+<!--                try {-->
+<!--                    await provider.send('eth_requestAccounts', []);-->
+<!--                    return provider.getSigner();-->
+<!--                } catch (error) {-->
+<!--                    console.log(`用户拒绝连接 MetaMask`);-->
+<!--                }-->
+<!--            } else {-->
+<!--                console.error(`MetaMask未安装`);-->
+<!--            }-->
+<!--        }-->
+
+<!--        function hashData(data) {-->
+<!--            return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data));-->
+<!--        }-->
+
+<!--        function encryptData(data, publicKey) {-->
+<!--            const buffer = Buffer.from(data);-->
+<!--            const encrypted = crypto.publicEncrypt(publicKey, buffer);-->
+<!--            return encrypted.toString('base64');-->
+<!--        }-->
+
+<!--        async function signMessage(message, signer) {-->
+<!--            return await signer.signMessage(ethers.utils.arrayify(message));-->
+<!--        }-->
+
+<!--        async function verifySignature(messageHash, signature, account) {-->
+<!--            const recoverAddress = ethers.utils.verifyMessage(ethers.utils.arrayify(messageHash), signature);-->
+<!--            return recoverAddress.toLowerCase() === account.toLowerCase();-->
+<!--        }-->
+
+<!--        async function storeTransaction(contract, account, transactionHash) {-->
+<!--            const tx = await contract.storeTransaction(account, transactionHash);-->
+<!--            await tx.wait();-->
+<!--        }-->
+
+<!--        async function main() {-->
+<!--            const signer = await connectMetamask();-->
+<!--            const account = await signer.getAddress();-->
+
+<!--            const message = document.getElementById('messageInput').value;-->
+<!--            const userPublicKey = document.getElementById('publicKeyInput').value;-->
+
+<!--            const hashedData = hashData(message);-->
+<!--            console.log(`数据摘要：`, hashedData);-->
+
+<!--            const signature = await signMessage(hashedData, signer);-->
+<!--            console.log(`签名完成！`);-->
+
+<!--            const isRightSign = await verifySignature(hashedData, signature, account);-->
+<!--            if (isRightSign) {-->
+<!--                console.log(`签名验证通过！`);-->
+
+<!--                const contractAddress = '0xABe0Bd8eF2989479F36B43848C4F94a2c3578Db9';-->
+<!--                const contractAbi = [-->
+<!--                    {-->
+<!--                        "inputs": [-->
+<!--                            { "internalType": "address", "name": "_sender", "type": "address" }-->
+<!--                        ],-->
+<!--                        "name": "getTransaction",-->
+<!--                        "outputs": [-->
+<!--                            { "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }-->
+<!--                        ],-->
+<!--                        "stateMutability": "view",-->
+<!--                        "type": "function"-->
+<!--                    },-->
+<!--                    {-->
+<!--                        "inputs": [-->
+<!--                            { "internalType": "address", "name": "_sender", "type": "address" },-->
+<!--                            { "internalType": "bytes32", "name": "_transaction", "type": "bytes32" }-->
+<!--                        ],-->
+<!--                        "name": "storeTransaction",-->
+<!--                        "outputs": [],-->
+<!--                        "stateMutability": "nonpayable",-->
+<!--                        "type": "function"-->
+<!--                    },-->
+<!--                    {-->
+<!--                        "inputs": [-->
+<!--                            { "internalType": "address", "name": "", "type": "address" },-->
+<!--                            { "internalType": "uint256", "name": "", "type": "uint256" }-->
+<!--                        ],-->
+<!--                        "name": "transactions",-->
+<!--                        "outputs": [-->
+<!--                            { "internalType": "bytes32", "name": "", "type": "bytes32" }-->
+<!--                        ],-->
+<!--                        "stateMutability": "view",-->
+<!--                        "type": "function"-->
+<!--                    }-->
+<!--                ];-->
+<!--                const contract = new ethers.Contract(contractAddress, contractAbi, signer);-->
+<!--                await storeTransaction(contract, userPublicKey, hashedData);-->
+<!--                console.log(`摘要成功上传！`);-->
+
+<!--                const encryptedData = encryptData(message, userPublicKey);-->
+<!--                // 后端获取密文-->
+<!--                // const response = await fetch('YOUR_BACKEND_URL', {-->
+<!--                //     method: 'POST',-->
+<!--                //     headers: {-->
+<!--                //         'Content-Type': 'application/json'-->
+<!--                //     },-->
+<!--                //     body: JSON.stringify({-->
+<!--                //         encryptedData: encryptedData-->
+<!--                //     })-->
+<!--                // });-->
+<!--            } else {-->
+<!--                console.log(`签名验证失败！`);-->
+<!--            }-->
+<!--        }-->
+
+<!--        document.addEventListener('DOMContentLoaded', () => {-->
+<!--            document.getElementById('submitBtn').addEventListener('click', async () => {-->
+<!--                await main();-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>签名和摘要测试</h2>-->
+
+<!--<label for="messageInput">消息:</label>-->
+<!--<input type="text" id="messageInput" placeholder="输入消息">-->
+
+<!--<br><br>-->
+
+<!--<label for="publicKeyInput">公钥:</label>-->
+<!--<input type="text" id="publicKeyInput" placeholder="输入公钥">-->
+
+<!--<br><br>-->
+
+<!--<button id="submitBtn">提交</button>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>签名测试</title>
+    <!-- 从 CDN 加载 ethers.js -->
+    <script
+            src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+            type="application/javascript"
+    ></script>
+    <!-- 添加自己的 JavaScript 代码 -->
+    <script>
+        async function connectMetamask() {
+            if (window.ethereum) {
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                try {
+                    await provider.send('eth_requestAccounts', []);
+                    return provider.getSigner();
+                } catch (error) {
+                    console.log(`用户拒绝连接 MetaMask`);
+                }
+            } else {
+                console.error(`MetaMask未安装`);
+            }
+        }
+
+        function hashData(data) {
+            return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data));
+        }
+
+        function encryptData(data, publicKey) {
+            const buffer = Buffer.from(data);
+            const encrypted = crypto.publicEncrypt(publicKey, buffer);
+            return encrypted.toString('base64');
+        }
+
+        async function signMessage(message, signer) {
+            return await signer.signMessage(ethers.utils.arrayify(message));
+        }
+
+        async function verifySignature(messageHash, signature, account) {
+            const recoverAddress = ethers.utils.verifyMessage(ethers.utils.arrayify(messageHash), signature);
+            return recoverAddress.toLowerCase() === account.toLowerCase();
+        }
+
+        async function storeTransaction(contract, account, transactionHash) {
+            const tx = await contract.storeTransaction(account, transactionHash);
+            await tx.wait();
+        }
+
+        async function main() {
+            const signer = await connectMetamask();
+            if (!signer) {
+                console.error('MetaMask连接失败');
+                return;
+            }
+            const account = await signer.getAddress();
+
+            const message = document.getElementById('messageInput').value;
+            const userPublicKey = document.getElementById('publicKeyInput').value;
+
+            const hashedData = hashData(message);
+            console.log(`数据摘要：`, hashedData);
+
+            const signature = await signMessage(hashedData, signer);
+            console.log(`签名完成！`);
+
+            const isRightSign = await verifySignature(hashedData, signature, account);
+            if (isRightSign) {
+                console.log(`签名验证通过！`);
+
+                const contractAddress = '0xABe0Bd8eF2989479F36B43848C4F94a2c3578Db9';
+                const contractAbi = [
+                    {
+                        "inputs": [
+                            { "internalType": "address", "name": "_sender", "type": "address" }
+                        ],
+                        "name": "getTransaction",
+                        "outputs": [
+                            { "internalType": "bytes32[]", "name": "", "type": "bytes32[]" }
+                        ],
+                        "stateMutability": "view",
+                        "type": "function"
+                    },
+                    {
+                        "inputs": [
+                            { "internalType": "address", "name": "_sender", "type": "address" },
+                            { "internalType": "bytes32", "name": "_transaction", "type": "bytes32" }
+                        ],
+                        "name": "storeTransaction",
+                        "outputs": [],
+                        "stateMutability": "nonpayable",
+                        "type": "function"
+                    },
+                    {
+                        "inputs": [
+                            { "internalType": "address", "name": "", "type": "address" },
+                            { "internalType": "uint256", "name": "", "type": "uint256" }
+                        ],
+                        "name": "transactions",
+                        "outputs": [
+                            { "internalType": "bytes32", "name": "", "type": "bytes32" }
+                        ],
+                        "stateMutability": "view",
+                        "type": "function"
+                    }
+                ];
+                const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+                await storeTransaction(contract, userPublicKey, hashedData);
+                console.log(`摘要成功上传！`);
+
+                const encryptedData = encryptData(message, userPublicKey);
+                // 后端获取密文
+                // const response = await fetch('YOUR_BACKEND_URL', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify({
+                //         encryptedData: encryptedData
+                //     })
+                // });
+            } else {
+                console.log(`签名验证失败！`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('submitBtn').addEventListener('click', async () => {
+                await main();
+            });
+        });
+    </script>
+</head>
+<body>
+<h2>签名和摘要测试</h2>
+
+<label for="messageInput">消息:</label>
+<input type="text" id="messageInput" placeholder="输入消息">
+
+<br><br>
+
+<label for="publicKeyInput">公钥:</label>
+<input type="text" id="publicKeyInput" placeholder="输入公钥">
+
+<br><br>
+
+<button id="submitBtn">提交</button>
+</body>
+</html>
