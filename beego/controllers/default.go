@@ -13,6 +13,7 @@ type MainController struct {
 	beego.Controller
 }
 
+
 func (c *MainController) Index() {
 	c.TplName = "index.html"
 }
@@ -62,4 +63,5 @@ func (c *MainController) Register() {
 
 func (c *MainController) ToHomePage() {
 	c.TplName = "homePage.html"
+
 }
