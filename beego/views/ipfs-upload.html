@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPFS 上传和存储 CID</title>
+</head>
+<body>
+    <script src ="../static/js/ipfs-upload.js"></script>
+    <h1>上传 .txt 文件并存储 CID</h1>
+
+    <!-- 文件上传区域 -->
+    <label for="fileInput">选择一个 .txt 文件：</label>
+    <input type="file" id="fileInput" accept=".txt">
+    <br><br>
+
+    <!-- 上传按钮 -->
+    <button onclick="uploadToIPFS()">上传到 IPFS</button>
+    <br><br>
+
+    <!-- 显示 CID -->
+    <label for="cidOutput">文件的 CID：</label>
+    <p id="cidOutput"></p>
+
+    <!-- 显示哈希摘要 -->
+    <label for="digestOutput">文件的哈希摘要：</label>
+    <p id="digestOutput"></p>
+
+    <!-- 区块链地址输入 -->
+    <label for="userAddress">请输入您的地址：</label>
+    <input type="text" id="userAddress" placeholder="0xYourAddress">
+    <br><br>
+
+    <!-- 存储 CID 到区块链按钮 -->
+    <button onclick="storeToBlockchain()">存储 CID 到区块链</button>
+</body>

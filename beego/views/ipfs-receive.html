@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件签名系统</title>
+    <style>
+        #signButton, #rejectButton {
+            display: none;
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #fileContent {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+        #filesList {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>文件签名系统</h1>
+    <p>请输入文件的 CID 以验证其完整性：</p>
+    <input type="text" id="cidInput" placeholder="输入CID">
+    <button id="getFileButton">获取并验证文件</button>
+
+    <h2>文件内容</h2>
+    <div id="fileContent">文件内容将显示在这里...</div>
+
+    <button id="signButton">签名文件</button>
+    <button id="rejectButton">拒绝签名</button>
+
+    <h2>文件列表</h2>
+    <button id="getFilesButton">获取文件列表</button>
+    <ul id="filesList">文件列表将显示在这里...</ul>
+
+    <!-- 插入JS文件 -->
+    <script src="../static/js/ipfs-receive.js"></script>
+
+    <script>
+        // 必须先等待页面加载完成才能获取元素并绑定事件监听
+        window.onload = function() {
+            // 获取文件按钮点击事件
+            document.getElementById('getFilesButton').addEventListener('click', async () => {
+                await getFilesFromContract();
+            });
+
+            // 获取指定 CID 的文件按钮点击事件
+            document.getElementById('getFileButton').addEventListener('click', async () => {
+                const cid = document.getElementById('cidInput').value;
+                if (cid) {
+                    await getFileFromIPFS(cid);
+                } else {
+                    alert('请输入 CID');
+                }
+            });
+
+            // 签名按钮点击事件
+            document.getElementById('signButton').addEventListener('click', async () => {
+                const cid = document.getElementById('signButton').dataset.cid;
+                const senderAddress = document.getElementById('signButton').dataset.sender;
+                await signFile(cid, senderAddress);
+            });
+
+            // 拒绝签名按钮点击事件
+            document.getElementById('rejectButton').addEventListener('click', () => {
+                const cid = document.getElementById('rejectButton').dataset.cid;
+                const userAddress = document.getElementById('userAddress').value;
+                rejectSignature(cid, userAddress);
+            });
+        };
+    </script>
+</body>
+</html>
