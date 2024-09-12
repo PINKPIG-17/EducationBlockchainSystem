@@ -1,6 +1,6 @@
 module beego
 
-go 1.21.7
+go 1.22
 
 require github.com/beego/beego/v2 v2.3.1
 
