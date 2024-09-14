@@ -3,6 +3,7 @@
     "cors": "^2.8.5",
     "ethers": "^6.13.2",
     "express": "^4.20.0",
-    "ipfs-http-client": "^60.0.1"
+    "ipfs-http-client": "^60.0.1",
+    "web3": "^1.8.2"
   }
 }

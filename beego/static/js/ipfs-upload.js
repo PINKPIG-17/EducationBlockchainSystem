@@ -1,281 +1,306 @@
-import { create } from "ipfs-http-client";
-import { ethers } from "ethers";
-
-// 初始化 IPFS 客户端
-const ipfs = create({
-    host: 'ipfs.infura.io',  // 使用 Infura 的公共 IPFS 节点
-    port: '5001',
-    protocol: 'https'  // 使用 HTTPS 进行安全连接
-});
+    const ipfs = window.IpfsHttpClient.create({
+        host: 'localhost',
+        port: '5001',
+        protocol: 'http'
+    });
 
 // 合约的地址和 ABI
-const jsonRpcProvider  = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/U0dK0spERJyBbs8DILZ643QoBe2WbHKg')
-const contractAddress = '0x63932EEDA71Dae7c17A5633A40e99b16D721CdAD';  
-const contractAbi = [{
-    "_format": "hh-sol-artifact-1",
-    "contractName": "StoreCIDs",
-    "sourceName": "contracts/store_cids.sol",
-    "abi": [
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "receiver",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "string",
-            "name": "cid",
-            "type": "string"
-          }
-        ],
-        "name": "DeleteCID",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "receiver",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "string",
-            "name": "cid",
-            "type": "string"
-          },
-          {
-            "indexed": false,
-            "internalType": "address",
-            "name": "sender",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "bytes32",
-            "name": "digest",
-            "type": "bytes32"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          }
-        ],
-        "name": "StoreCID",
-        "type": "event"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "cids",
-        "outputs": [
-          {
-            "internalType": "string",
-            "name": "cid",
-            "type": "string"
-          },
-          {
-            "internalType": "address",
-            "name": "sender",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "digest",
-            "type": "bytes32"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "_receiver",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "index",
-            "type": "uint256"
-          }
-        ],
-        "name": "deleteCid",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "_receiver",
-            "type": "address"
-          }
-        ],
-        "name": "getFiles",
-        "outputs": [
-          {
-            "components": [
-              {
-                "internalType": "string",
-                "name": "cid",
-                "type": "string"
-              },
-              {
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-              },
-              {
-                "internalType": "uint256",
-                "name": "timestamp",
-                "type": "uint256"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "digest",
-                "type": "bytes32"
-              }
-            ],
-            "internalType": "struct StoreCIDs.CID[]",
-            "name": "",
-            "type": "tuple[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "string",
-            "name": "_cid",
-            "type": "string"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "_digest",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "address",
-            "name": "_receiver",
-            "type": "address"
-          }
-        ],
-        "name": "storeFile",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      }
-    ],
-    "bytecode": "0x608060405234801561001057600080fd5b506115ff806100206000396000f3fe608060405234801561001057600080fd5b506004361061004b5760003560e01c80622e28a514610050578063433bf37b1461008357806350b7c561146100b3578063bf6be7af146100cf575b600080fd5b61006a60048036038101906100659190610ad8565b6100eb565b60405161007a9493929190610bdf565b60405180910390f35b61009d60048036038101906100989190610c2b565b6101e0565b6040516100aa9190610df4565b60405180910390f35b6100cd60048036038101906100c89190610ad8565b6103e7565b005b6100e960048036038101906100e49190610f77565b610863565b005b6000602052816000526040600020818154811061010757600080fd5b90600052602060002090600402016000915091505080600001805461012b90611015565b80601f016020809104026020016040519081016040528092919081815260200182805461015790611015565b80156101a45780601f10610179576101008083540402835291602001916101a4565b820191906000526020600020905b81548152906001019060200180831161018757829003601f168201915b5050505050908060010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154908060030154905084565b60603373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff1614610250576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161024790611092565b60405180910390fd5b6000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805480602002602001604051908101604052809291908181526020016000905b828210156103dc57838290600052602060002090600402016040518060800160405290816000820180546102e190611015565b80601f016020809104026020016040519081016040528092919081815260200182805461030d90611015565b801561035a5780601f1061032f5761010080835404028352916020019161035a565b820191906000526020600020905b81548152906001019060200180831161033d57829003601f168201915b505050505081526020016001820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200160028201548152602001600382015481525050815260200190600101906102ae565b505050509050919050565b6000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002080549050811061046a576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610461906110fe565b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16146104d8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016104cf90611092565b60405180910390fd5b60008060008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020828154811061052a5761052961111e565b5b9060005260206000209060040201600001805461054690611015565b80601f016020809104026020016040519081016040528092919081815260200182805461057290611015565b80156105bf5780601f10610594576101008083540402835291602001916105bf565b820191906000526020600020905b8154815290600101906020018083116105a257829003601f168201915b505050505090506000808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060016000808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002080549050610652919061117c565b815481106106635761066261111e565b5b90600052602060002090600402016000808573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002083815481106106c1576106c061111e565b5b9060005260206000209060040201600082018160000190816106e39190611372565b506001820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168160010160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060028201548160020155600382015481600301559050506000808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208054806107b0576107af61145a565b5b6001900381819060005260206000209060040201600080820160006107d591906109d3565b6001820160006101000a81549073ffffffffffffffffffffffffffffffffffffffff021916905560028201600090556003820160009055505090558273ffffffffffffffffffffffffffffffffffffffff167fec53acee17e291d4c2113d26ee57d287301f82fafa5871c806185942df36fbdf826040516108569190611489565b60405180910390a2505050565b600060405180608001604052808581526020013373ffffffffffffffffffffffffffffffffffffffff1681526020014281526020018481525090506000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819080600181540180825580915050600190039060005260206000209060040201600090919091909150600082015181600001908161091b91906114ab565b5060208201518160010160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550604082015181600201556060820151816003015550508173ffffffffffffffffffffffffffffffffffffffff167f9e579ea0c4da0f88f445fc1ca29e6141a190d5ad059c58931481738eebddfb03853386426040516109c5949392919061157d565b60405180910390a250505050565b5080546109df90611015565b6000825580601f106109f15750610a10565b601f016020900490600052602060002090810190610a0f9190610a13565b5b50565b5b80821115610a2c576000816000905550600101610a14565b5090565b6000604051905090565b600080fd5b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000610a6f82610a44565b9050919050565b610a7f81610a64565b8114610a8a57600080fd5b50565b600081359050610a9c81610a76565b92915050565b6000819050919050565b610ab581610aa2565b8114610ac057600080fd5b50565b600081359050610ad281610aac565b92915050565b60008060408385031215610aef57610aee610a3a565b5b6000610afd85828601610a8d565b9250506020610b0e85828601610ac3565b9150509250929050565b600081519050919050565b600082825260208201905092915050565b60005b83811015610b52578082015181840152602081019050610b37565b60008484015250505050565b6000601f19601f8301169050919050565b6000610b7a82610b18565b610b848185610b23565b9350610b94818560208601610b34565b610b9d81610b5e565b840191505092915050565b610bb181610a64565b82525050565b610bc081610aa2565b82525050565b6000819050919050565b610bd981610bc6565b82525050565b60006080820190508181036000830152610bf98187610b6f565b9050610c086020830186610ba8565b610c156040830185610bb7565b610c226060830184610bd0565b95945050505050565b600060208284031215610c4157610c40610a3a565b5b6000610c4f84828501610a8d565b91505092915050565b600081519050919050565b600082825260208201905092915050565b6000819050602082019050919050565b600082825260208201905092915050565b6000610ca082610b18565b610caa8185610c84565b9350610cba818560208601610b34565b610cc381610b5e565b840191505092915050565b610cd781610a64565b82525050565b610ce681610aa2565b82525050565b610cf581610bc6565b82525050565b60006080830160008301518482036000860152610d188282610c95565b9150506020830151610d2d6020860182610cce565b506040830151610d406040860182610cdd565b506060830151610d536060860182610cec565b508091505092915050565b6000610d6a8383610cfb565b905092915050565b6000602082019050919050565b6000610d8a82610c58565b610d948185610c63565b935083602082028501610da685610c74565b8060005b85811015610de25784840389528151610dc38582610d5e565b9450610dce83610d72565b925060208a01995050600181019050610daa565b50829750879550505050505092915050565b60006020820190508181036000830152610e0e8184610d7f565b905092915050565b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610e5882610b5e565b810181811067ffffffffffffffff82111715610e7757610e76610e20565b5b80604052505050565b6000610e8a610a30565b9050610e968282610e4f565b919050565b600067ffffffffffffffff821115610eb657610eb5610e20565b5b610ebf82610b5e565b9050602081019050919050565b82818337600083830152505050565b6000610eee610ee984610e9b565b610e80565b905082815260208101848484011115610f0a57610f09610e1b565b5b610f15848285610ecc565b509392505050565b600082601f830112610f3257610f31610e16565b5b8135610f42848260208601610edb565b91505092915050565b610f5481610bc6565b8114610f5f57600080fd5b50565b600081359050610f7181610f4b565b92915050565b600080600060608486031215610f9057610f8f610a3a565b5b600084013567ffffffffffffffff811115610fae57610fad610a3f565b5b610fba86828701610f1d565b9350506020610fcb86828701610f62565b9250506040610fdc86828701610a8d565b9150509250925092565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b6000600282049050600182168061102d57607f821691505b6020821081036110405761103f610fe6565b5b50919050565b7f596f7520617265206e6f7420746865206f776e65722100000000000000000000600082015250565b600061107c601683610b23565b915061108782611046565b602082019050919050565b600060208201905081810360008301526110ab8161106f565b9050919050565b7f496e76616c696420496e64657800000000000000000000000000000000000000600082015250565b60006110e8600d83610b23565b91506110f3826110b2565b602082019050919050565b60006020820190508181036000830152611117816110db565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061118782610aa2565b915061119283610aa2565b92508282039050818111156111aa576111a961114d565b5b92915050565b6000815490506111bf81611015565b9050919050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b6000600883026112287fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff826111eb565b61123286836111eb565b95508019841693508086168417925050509392505050565b6000819050919050565b600061126f61126a61126584610aa2565b61124a565b610aa2565b9050919050565b6000819050919050565b61128983611254565b61129d61129582611276565b8484546111f8565b825550505050565b600090565b6112b26112a5565b6112bd818484611280565b505050565b5b818110156112e1576112d66000826112aa565b6001810190506112c3565b5050565b601f821115611326576112f7816111c6565b611300846111db565b8101602085101561130f578190505b61132361131b856111db565b8301826112c2565b50505b505050565b600082821c905092915050565b60006113496000198460080261132b565b1980831691505092915050565b60006113628383611338565b9150826002028217905092915050565b818103611380575050611458565b611389826111b0565b67ffffffffffffffff8111156113a2576113a1610e20565b5b6113ac8254611015565b6113b78282856112e5565b6000601f8311600181146113e657600084156113d4578287015490505b6113de8582611356565b865550611451565b601f1984166113f4876111c6565b96506113ff866111c6565b60005b8281101561142757848901548255600182019150600185019450602081019050611402565b868310156114445784890154611440601f891682611338565b8355505b6001600288020188555050505b5050505050505b565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603160045260246000fd5b600060208201905081810360008301526114a38184610b6f565b905092915050565b6114b482610b18565b67ffffffffffffffff8111156114cd576114cc610e20565b5b6114d78254611015565b6114e28282856112e5565b600060209050601f8311600181146115155760008415611503578287015190505b61150d8582611356565b865550611575565b601f198416611523866111c6565b60005b8281101561154b57848901518255600182019150602085019450602081019050611526565b868310156115685784890151611564601f891682611338565b8355505b6001600288020188555050505b505050505050565b600060808201905081810360008301526115978187610b6f565b90506115a66020830186610ba8565b6115b36040830185610bd0565b6115c06060830184610bb7565b9594505050505056fea26469706673582212204188b27fdf514613e02e9dc7883236ad54bab0a260d2145f5b549d99959be0d464736f6c63430008180033",
-    "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061004b5760003560e01c80622e28a514610050578063433bf37b1461008357806350b7c561146100b3578063bf6be7af146100cf575b600080fd5b61006a60048036038101906100659190610ad8565b6100eb565b60405161007a9493929190610bdf565b60405180910390f35b61009d60048036038101906100989190610c2b565b6101e0565b6040516100aa9190610df4565b60405180910390f35b6100cd60048036038101906100c89190610ad8565b6103e7565b005b6100e960048036038101906100e49190610f77565b610863565b005b6000602052816000526040600020818154811061010757600080fd5b90600052602060002090600402016000915091505080600001805461012b90611015565b80601f016020809104026020016040519081016040528092919081815260200182805461015790611015565b80156101a45780601f10610179576101008083540402835291602001916101a4565b820191906000526020600020905b81548152906001019060200180831161018757829003601f168201915b5050505050908060010160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060020154908060030154905084565b60603373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff1614610250576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161024790611092565b60405180910390fd5b6000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020805480602002602001604051908101604052809291908181526020016000905b828210156103dc57838290600052602060002090600402016040518060800160405290816000820180546102e190611015565b80601f016020809104026020016040519081016040528092919081815260200182805461030d90611015565b801561035a5780601f1061032f5761010080835404028352916020019161035a565b820191906000526020600020905b81548152906001019060200180831161033d57829003601f168201915b505050505081526020016001820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200160028201548152602001600382015481525050815260200190600101906102ae565b505050509050919050565b6000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002080549050811061046a576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610461906110fe565b60405180910390fd5b3373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16146104d8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016104cf90611092565b60405180910390fd5b60008060008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020828154811061052a5761052961111e565b5b9060005260206000209060040201600001805461054690611015565b80601f016020809104026020016040519081016040528092919081815260200182805461057290611015565b80156105bf5780601f10610594576101008083540402835291602001916105bf565b820191906000526020600020905b8154815290600101906020018083116105a257829003601f168201915b505050505090506000808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060016000808673ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002080549050610652919061117c565b815481106106635761066261111e565b5b90600052602060002090600402016000808573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002083815481106106c1576106c061111e565b5b9060005260206000209060040201600082018160000190816106e39190611372565b506001820160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff168160010160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060028201548160020155600382015481600301559050506000808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208054806107b0576107af61145a565b5b6001900381819060005260206000209060040201600080820160006107d591906109d3565b6001820160006101000a81549073ffffffffffffffffffffffffffffffffffffffff021916905560028201600090556003820160009055505090558273ffffffffffffffffffffffffffffffffffffffff167fec53acee17e291d4c2113d26ee57d287301f82fafa5871c806185942df36fbdf826040516108569190611489565b60405180910390a2505050565b600060405180608001604052808581526020013373ffffffffffffffffffffffffffffffffffffffff1681526020014281526020018481525090506000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020819080600181540180825580915050600190039060005260206000209060040201600090919091909150600082015181600001908161091b91906114ab565b5060208201518160010160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550604082015181600201556060820151816003015550508173ffffffffffffffffffffffffffffffffffffffff167f9e579ea0c4da0f88f445fc1ca29e6141a190d5ad059c58931481738eebddfb03853386426040516109c5949392919061157d565b60405180910390a250505050565b5080546109df90611015565b6000825580601f106109f15750610a10565b601f016020900490600052602060002090810190610a0f9190610a13565b5b50565b5b80821115610a2c576000816000905550600101610a14565b5090565b6000604051905090565b600080fd5b600080fd5b600073ffffffffffffffffffffffffffffffffffffffff82169050919050565b6000610a6f82610a44565b9050919050565b610a7f81610a64565b8114610a8a57600080fd5b50565b600081359050610a9c81610a76565b92915050565b6000819050919050565b610ab581610aa2565b8114610ac057600080fd5b50565b600081359050610ad281610aac565b92915050565b60008060408385031215610aef57610aee610a3a565b5b6000610afd85828601610a8d565b9250506020610b0e85828601610ac3565b9150509250929050565b600081519050919050565b600082825260208201905092915050565b60005b83811015610b52578082015181840152602081019050610b37565b60008484015250505050565b6000601f19601f8301169050919050565b6000610b7a82610b18565b610b848185610b23565b9350610b94818560208601610b34565b610b9d81610b5e565b840191505092915050565b610bb181610a64565b82525050565b610bc081610aa2565b82525050565b6000819050919050565b610bd981610bc6565b82525050565b60006080820190508181036000830152610bf98187610b6f565b9050610c086020830186610ba8565b610c156040830185610bb7565b610c226060830184610bd0565b95945050505050565b600060208284031215610c4157610c40610a3a565b5b6000610c4f84828501610a8d565b91505092915050565b600081519050919050565b600082825260208201905092915050565b6000819050602082019050919050565b600082825260208201905092915050565b6000610ca082610b18565b610caa8185610c84565b9350610cba818560208601610b34565b610cc381610b5e565b840191505092915050565b610cd781610a64565b82525050565b610ce681610aa2565b82525050565b610cf581610bc6565b82525050565b60006080830160008301518482036000860152610d188282610c95565b9150506020830151610d2d6020860182610cce565b506040830151610d406040860182610cdd565b506060830151610d536060860182610cec565b508091505092915050565b6000610d6a8383610cfb565b905092915050565b6000602082019050919050565b6000610d8a82610c58565b610d948185610c63565b935083602082028501610da685610c74565b8060005b85811015610de25784840389528151610dc38582610d5e565b9450610dce83610d72565b925060208a01995050600181019050610daa565b50829750879550505050505092915050565b60006020820190508181036000830152610e0e8184610d7f565b905092915050565b600080fd5b600080fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b610e5882610b5e565b810181811067ffffffffffffffff82111715610e7757610e76610e20565b5b80604052505050565b6000610e8a610a30565b9050610e968282610e4f565b919050565b600067ffffffffffffffff821115610eb657610eb5610e20565b5b610ebf82610b5e565b9050602081019050919050565b82818337600083830152505050565b6000610eee610ee984610e9b565b610e80565b905082815260208101848484011115610f0a57610f09610e1b565b5b610f15848285610ecc565b509392505050565b600082601f830112610f3257610f31610e16565b5b8135610f42848260208601610edb565b91505092915050565b610f5481610bc6565b8114610f5f57600080fd5b50565b600081359050610f7181610f4b565b92915050565b600080600060608486031215610f9057610f8f610a3a565b5b600084013567ffffffffffffffff811115610fae57610fad610a3f565b5b610fba86828701610f1d565b9350506020610fcb86828701610f62565b9250506040610fdc86828701610a8d565b9150509250925092565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b6000600282049050600182168061102d57607f821691505b6020821081036110405761103f610fe6565b5b50919050565b7f596f7520617265206e6f7420746865206f776e65722100000000000000000000600082015250565b600061107c601683610b23565b915061108782611046565b602082019050919050565b600060208201905081810360008301526110ab8161106f565b9050919050565b7f496e76616c696420496e64657800000000000000000000000000000000000000600082015250565b60006110e8600d83610b23565b91506110f3826110b2565b602082019050919050565b60006020820190508181036000830152611117816110db565b9050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603260045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052601160045260246000fd5b600061118782610aa2565b915061119283610aa2565b92508282039050818111156111aa576111a961114d565b5b92915050565b6000815490506111bf81611015565b9050919050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b6000600883026112287fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff826111eb565b61123286836111eb565b95508019841693508086168417925050509392505050565b6000819050919050565b600061126f61126a61126584610aa2565b61124a565b610aa2565b9050919050565b6000819050919050565b61128983611254565b61129d61129582611276565b8484546111f8565b825550505050565b600090565b6112b26112a5565b6112bd818484611280565b505050565b5b818110156112e1576112d66000826112aa565b6001810190506112c3565b5050565b601f821115611326576112f7816111c6565b611300846111db565b8101602085101561130f578190505b61132361131b856111db565b8301826112c2565b50505b505050565b600082821c905092915050565b60006113496000198460080261132b565b1980831691505092915050565b60006113628383611338565b9150826002028217905092915050565b818103611380575050611458565b611389826111b0565b67ffffffffffffffff8111156113a2576113a1610e20565b5b6113ac8254611015565b6113b78282856112e5565b6000601f8311600181146113e657600084156113d4578287015490505b6113de8582611356565b865550611451565b601f1984166113f4876111c6565b96506113ff866111c6565b60005b8281101561142757848901548255600182019150600185019450602081019050611402565b868310156114445784890154611440601f891682611338565b8355505b6001600288020188555050505b5050505050505b565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052603160045260246000fd5b600060208201905081810360008301526114a38184610b6f565b905092915050565b6114b482610b18565b67ffffffffffffffff8111156114cd576114cc610e20565b5b6114d78254611015565b6114e28282856112e5565b600060209050601f8311600181146115155760008415611503578287015190505b61150d8582611356565b865550611575565b601f198416611523866111c6565b60005b8281101561154b57848901518255600182019150602085019450602081019050611526565b868310156115685784890151611564601f891682611338565b8355505b6001600288020188555050505b505050505050565b600060808201905081810360008301526115978187610b6f565b90506115a66020830186610ba8565b6115b36040830185610bd0565b6115c06060830184610bb7565b9594505050505056fea26469706673582212204188b27fdf514613e02e9dc7883236ad54bab0a260d2145f5b549d99959be0d464736f6c63430008180033",
-    "linkReferences": {},
-    "deployedLinkReferences": {}
-  }
-  ];
+    const jsonRpcProvider = new ethers.JsonRpcProvider('https://eth-sepolia.g.alchemy.com/v2/U0dK0spERJyBbs8DILZ643QoBe2WbHKg')
+    const contractAddress ='0xabD2c01a0D4110c1901D71e348644CA3A98B190b';
+    const contractAbi = [
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "receiver",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "cid",
+                        "type": "string"
+                    }
+                ],
+                "name": "DeleteCID",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": true,
+                        "internalType": "address",
+                        "name": "receiver",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "cid",
+                        "type": "string"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "sender",
+                        "type": "address"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "bytes32",
+                        "name": "digest",
+                        "type": "bytes32"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "StoreCID",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "cids",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "cid",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "sender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "timestamp",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "digest",
+                        "type": "bytes32"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_sender",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "cidToDelete",
+                        "type": "string"
+                    }
+                ],
+                "name": "deleteCid",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "address",
+                        "name": "_receiver",
+                        "type": "address"
+                    }
+                ],
+                "name": "getFiles",
+                "outputs": [
+                    {
+                        "internalType": "string[]",
+                        "name": "_cids",
+                        "type": "string[]"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "_senders",
+                        "type": "address[]"
+                    },
+                    {
+                        "internalType": "uint256[]",
+                        "name": "_timestamps",
+                        "type": "uint256[]"
+                    },
+                    {
+                        "internalType": "bytes32[]",
+                        "name": "_digests",
+                        "type": "bytes32[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "string",
+                        "name": "_cid",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "bytes32",
+                        "name": "_digest",
+                        "type": "bytes32"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "_receiver",
+                        "type": "address"
+                    }
+                ],
+                "name": "storeFile",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ]
 
-let globalCid = "";  // 用于存储 CID，供后续操作使用
+    // 返回上传结果的CID和Digest
+    async function uploadToIPFS() {
+        const fileInput = document.getElementById('fileInput');
+        const files = fileInput.files;
 
-export async function uploadToIPFS() {
-    const fileInput = document.getElementById('fileInput');
-    const files = fileInput.files;
+        if (!files.length) {
+            console.log('请选择文件上传！');
+            return;
+        }
 
-    if (!files.length) {
-        console.log('请选择文件传入！');
-        return;
+        if (files.length > 1) {
+            console.log('仅能上传一个文件！');
+            return;
+        }
+
+        const file = files[0];
+
+        try {
+            const reader = new FileReader();
+
+            return new Promise((resolve, reject) => {
+                reader.onload = async function (event) {
+                    const arrayBuffer = event.target.result;
+                    const textContent = new TextDecoder().decode(arrayBuffer);
+                    const digest = ethers.keccak256(ethers.toUtf8Bytes(textContent));
+                    const textBlob = new Blob([textContent], { type: 'text/plain' });
+                    const added = await ipfs.add(textBlob, { pin: true });
+
+                    const cid = added.cid.toString();
+                    resolve({ cid, digest });
+                };
+
+                reader.onerror = (error) => reject(error);
+                reader.readAsArrayBuffer(file);
+            });
+        } catch (error) {
+            console.error('文件上传失败！', error);
+        }
     }
 
-    if (files.length > 1) {
-        console.log('仅能传入一个文件！');
-        return;
+    // 调用智能合约，存储 CID 和摘要
+    async function storeCIDOnChain(userAddress, signer, cid, digest) {
+        const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+        console.log(contract);
+
+        try {
+            const tx = await contract.storeFile(cid, digest, userAddress);
+            console.log('Transaction Hash:', tx.hash);
+            await tx.wait(); // 等待交易确认
+            console.log('CID 和摘要成功存储到链上！');
+        } catch (error) {
+            console.error('存储CID和摘要失败！', error);
+        }
     }
 
-    const file = files[0];
+    // 检查是否安装MetaMask并连接账户
+    async function checkMetaMaskConnection() {
+        if (typeof window.ethereum !== 'undefined') {
+            console.log('MetaMask 已安装!');
 
-    try {
-        // 使用 FileReader 将文件读取为 ArrayBuffer
-        const reader = new FileReader();
-        
-        reader.onload = async function(event) {
-            const arrayBuffer = event.target.result;  // 获取文件的 ArrayBuffer（二进制数据）
+            try {
+                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
 
-            // 将 ArrayBuffer 转换为字符串
-            const textContent = new TextDecoder().decode(arrayBuffer);
-            console.log("文件内容：", textContent);  // 打印文件内容以便调试
-
-            // 生成文件内容的 Keccak256 哈希摘要
-            const digest = hashData(textContent);
-
-            // 将文本内容转换为 Blob 对象以便上传到 IPFS
-            const textBlob = new Blob([textContent], { type: 'text/plain' });
-
-            // 上传到 IPFS 并设置 pin: true
-            const added = await ipfs.add(textBlob, { pin: true });  // 确保文件被固定（pinned）
-            const cid = added.cid.toString();
-
-            // 存储 CID 和摘要到全局变量
-            globalCid = cid;
-
-            // 显示生成的 CID
-            document.getElementById('cidOutput').innerText = `文件成功上传! CID: ${cid}`;
-            console.log('文件成功上传! CID:', cid);
-
-            // 存储 CID 到区块链的函数
-            await storeCIDOnChain(cid, digest, userAddress, signer); // 示例，假设你有合约交互的代码
-        };
-
-        // 读取文件内容为 ArrayBuffer
-        reader.readAsArrayBuffer(file);  // 从文件读取原始数据并转换为 ArrayBuffer
-
-    } catch (error) {
-        console.error('上传失败！', error);
+                if (accounts.length === 0) {
+                    console.log('MetaMask 未连接，请连接您的账户！');
+                    await requestMetaMaskConnection();
+                } else {
+                    console.log('MetaMask 已连接:', accounts[0]);
+                    return accounts[0];
+                }
+            } catch (error) {
+                console.error('无法获取账户信息！', error);
+            }
+        } else {
+            console.error('MetaMask 未安装，请先安装 MetaMask 扩展！');
+            alert('请安装 MetaMask 以继续。');
+        }
     }
-}
 
-// 生成 Keccak256 哈希摘要
-function hashData(data) {
-    return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data));
-}
+    // 请求MetaMask连接账户
+    async function requestMetaMaskConnection() {
+        try {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            console.log('已成功连接 MetaMask:', accounts[0]);
+            return accounts[0];
+        } catch (error) {
+            console.error('用户拒绝连接 MetaMask', error);
+        }
+    }
 
-// 调用智能合约，存储 CID 和摘要
-export async function storeCIDOnChain(cid, digest, userAddress, signer) {
-    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+async function main() {
+    if (typeof window.ethereum !== 'undefined') {
+        console.log('MetaMask 已安装');
 
-    try {
-        const tx = await contract.storeFile(cid, digest, userAddress);
-        console.log('Transaction Hash:', tx.hash);
+        // 在 main 函数中动态获取 provider 和 signer
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
 
-        // 等待交易被确认
-        await tx.wait();
-        console.log('CID 和摘要成功存储到链上！');
-    } catch (error) {
-        console.log('存储 CID 和摘要失败！', error);
+        // 继续进行接下来的操作，例如用户连接账户、文件上传和链上存储
+        const userAddress = document.getElementById('userAddress').value;
+        if (!userAddress) {
+            alert('请输入您的地址！');
+            return;
+        }
+
+        const connectedAddress = await checkMetaMaskConnection();
+        if (connectedAddress) {
+            try {
+                const { cid, digest } = await uploadToIPFS();
+                document.getElementById('cidOutput').innerText = `CID: ${cid}`;
+                document.getElementById('digestOutput').innerText = `Digest: ${digest}`;
+
+                await storeCIDOnChain(userAddress, signer, cid, digest);
+            } catch (error) {
+                console.error('操作失败', error);
+            }
+        } else {
+            console.log('MetaMask 未连接，无法继续操作。');
+        }
+    } else {
+        console.error('MetaMask 未安装');
+        alert('请安装 MetaMask 扩展程序。');
     }
 }
