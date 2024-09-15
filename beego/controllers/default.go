@@ -65,10 +65,10 @@ func (c *MainController) ToHomePage() {
 
 }
 
-func (c *MainController) toIPFSReceive() {
+func (c *MainController) ToIPFSReceive() {
 	c.TplName = "ipfs-recive.html"
 }
 
-func (c *MainController) toIPFSUpload() {
+func (c *MainController) ToIPFSUpload() {
 	c.TplName = "ipfs-upload.html"
 }

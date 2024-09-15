@@ -26,56 +26,85 @@
     </style>
 </head>
 <body>
-    <h1>文件签名系统</h1>
-    <p>请输入文件的 CID 以验证其完整性：</p>
-    <input type="text" id="cidInput" placeholder="输入CID">
-    <button id="getFileButton">获取并验证文件</button>
+    <div id="app">
+        <h1>文件签名系统</h1>
+        <p>请输入文件的 CID 以验证其完整性：</p>
+        <input type="text" v-model="cidInput" placeholder="输入CID">
+        <button @click="getFile">获取并验证文件</button>
 
-    <h2>文件内容</h2>
-    <div id="fileContent">文件内容将显示在这里...</div>
+        <h2>文件内容</h2>
+        <div id="fileContent">{{ fileContent || '文件内容将显示在这里...' }}</div>
 
-    <button id="signButton">签名文件</button>
-    <button id="rejectButton">拒绝签名</button>
+        <button v-if="showSignButton" @click="signFile">签名文件</button>
+        <button v-if="showRejectButton" @click="rejectSignature">拒绝签名</button>
 
-    <h2>文件列表</h2>
-    <button id="getFilesButton">获取文件列表</button>
-    <ul id="filesList">文件列表将显示在这里...</ul>
+        <h2>文件列表</h2>
+        <button @click="getFilesList">获取文件列表</button>
+        <ul id="filesList">
+            <li v-for="file in filesList" :key="file.cid">{{ file.cid }}</li>
+        </ul>
+    </div>
 
-    <!-- 插入JS文件 -->
+    <script src="./lib/vue.js"></script>
     <script src="../static/js/ipfs-receive.js"></script>
 
     <script>
-        // 必须先等待页面加载完成才能获取元素并绑定事件监听
-        window.onload = function() {
-            // 获取文件按钮点击事件
-            document.getElementById('getFilesButton').addEventListener('click', async () => {
-                await getFilesFromContract();
-            });
-
-            // 获取指定 CID 的文件按钮点击事件
-            document.getElementById('getFileButton').addEventListener('click', async () => {
-                const cid = document.getElementById('cidInput').value;
-                if (cid) {
-                    await getFileFromIPFS(cid);
-                } else {
-                    alert('请输入 CID');
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    cidInput: '',
+                    fileContent: '',
+                    filesList: [],
+                    showSignButton: false,
+                    showRejectButton: false,
+                    fileCid: '',
+                    senderAddress: ''
+                };
+            },
+            methods: {
+                async getFile() {
+                    if (this.cidInput) {
+                        try {
+                            // 调用IPFS获取文件内容的函数
+                            const file = await getFileFromIPFS(this.cidInput);
+                            this.fileContent = file.content;
+                            this.fileCid = this.cidInput;
+                            this.senderAddress = file.senderAddress;
+                            this.showSignButton = true;
+                            this.showRejectButton = true;
+                        } catch (error) {
+                            console.error('获取文件错误:', error);
+                            alert('文件获取失败');
+                        }
+                    } else {
+                        alert('请输入 CID');
+                    }
+                },
+                async signFile() {
+                    try {
+                        await signFile(this.fileCid, this.senderAddress);
+                        alert('文件已签名');
+                    } catch (error) {
+                        console.error('签名失败:', error);
+                        alert('签名失败');
+                    }
+                },
+                rejectSignature() {
+                    const userAddress = document.getElementById('userAddress').value;
+                    rejectSignature(this.fileCid, userAddress);
+                },
+                async getFilesList() {
+                    try {
+                        const files = await getFilesFromContract();
+                        this.filesList = files;
+                    } catch (error) {
+                        console.error('获取文件列表错误:', error);
+                        alert('文件列表获取失败');
+                    }
                 }
-            });
-
-            // 签名按钮点击事件
-            document.getElementById('signButton').addEventListener('click', async () => {
-                const cid = document.getElementById('signButton').dataset.cid;
-                const senderAddress = document.getElementById('signButton').dataset.sender;
-                await signFile(cid, senderAddress);
-            });
-
-            // 拒绝签名按钮点击事件
-            document.getElementById('rejectButton').addEventListener('click', () => {
-                const cid = document.getElementById('rejectButton').dataset.cid;
-                const userAddress = document.getElementById('userAddress').value;
-                rejectSignature(cid, userAddress);
-            });
-        };
+            }
+        });
     </script>
 </body>
 </html>
