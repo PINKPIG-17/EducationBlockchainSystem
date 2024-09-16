@@ -250,52 +250,6 @@ async function getFilesFromContract() {
     }
 }
 
-
-// 签名文件并调用合约删除 CID
-// async function sigFile(cid) {
-//     try {
-//         const provider = new ethers.BrowserProvider(window.ethereum);
-//         const signer = await provider.getSigner();
-//
-//         // 获取当前用户的地址
-//         const userAddress = await signer.getAddress();
-//
-//         // 调用合约，获取用户文件列表
-//         const contract = new ethers.Contract(storeContractAddress, storeContractAbi, signer);
-//         const files = await contract.getFiles(userAddress);  // 从合约获取用户的文件列表
-//
-//         // 查找与传入的 CID 匹配的文件
-//         const file = files.find(f => f.cid === cid);
-//         if (!file) {
-//             alert('未找到与此 CID 匹配的文件');
-//             return;
-//         }
-//
-//         // 获取文件的发送者地址（根据你提供的 CID 结构体）
-//         const senderAddress = file.sender;
-//
-//         // 计算文件的哈希值
-//         const digest = ethers.keccak256(ethers.toUtf8Bytes(cid));
-//
-//         // 使用当前签名者签署哈希值
-//         const signature = await signer.signMessage(ethers.toUtf8Bytes(digest));
-//
-//         // 使用 receiveContract 调用 storeUserInfo 函数，将签名、哈希等信息存储到合约
-//         const receiveContract = new ethers.Contract(receiveContractAddress, receiveContractAbi, signer);
-//         const tx = await receiveContract.storeUserInfo(senderAddress, digest, signature);
-//         await tx.wait();  // 等待交易确认
-//
-//         // 反馈给用户成功信息
-//         console.log('文件签名已成功存储');
-//         alert('文件签名成功');
-//
-//         // 删除已签名的文件
-//         await deleteCid(cid, userAddress);
-//     } catch (error) {
-//         console.error('签名存储失败:', error);
-//         alert(`签名存储失败: ${error.message}`);
-//     }
-// }
 async function sigFile(cid) {
     try {
         const provider = new ethers.BrowserProvider(window.ethereum);
@@ -323,6 +277,9 @@ async function sigFile(cid) {
 
         // 使用当前签名者签署哈希值
         const signature = await signer.signMessage(ethers.toUtf8Bytes(digest));
+
+        //将数据发给后端
+        await sendToSQL(cid, senderAddress, signature, digest);
 
         // 使用 receiveContract 调用 storeUserInfo 函数，将签名、哈希等信息存储到合约
         const receiveContract = new ethers.Contract(receiveContractAddress, receiveContractAbi, signer);
@@ -593,3 +550,50 @@ window.onload = function() {
     });
 };
 
+// 从 IPFS 获取原文的函数
+async function getText(cid) {
+    try {
+        // 从 IPFS 获取文件内容
+        const stream = ipfs.cat(cid);
+        let fileContent = '';
+        for await (const chunk of stream) {
+            fileContent += new TextDecoder().decode(chunk);
+        }
+
+        return fileContent;  // 返回获取到的文件原文
+    } catch (error) {
+        console.error('从 IPFS 获取原文失败:', error);
+        throw new Error('从 IPFS 获取原文失败');
+    }
+}
+
+// 将原文加密并存入后端的函数
+async function sendToSQL(cid, senderAddress, signature, digest) {
+    try {
+        // 调用 getText 获取原文
+        const originalText = await getText(cid);
+
+        // 使用发送者的公钥对原文进行加密
+        const encryptedText = await encryptWithSenderPublicKey(senderAddress, originalText);
+
+        // 发送加密后的原文、发送者地址、签名和摘要到后端
+        await fetch('/store-encrypted-text', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                cid,
+                encryptedText,
+                senderAddress,
+                signature,
+                digest,
+            }),
+        });
+
+        console.log('加密后的原文已成功存储到后端');
+    } catch (error) {
+        console.error('存储加密后的原文失败:', error);
+        throw new Error('存储加密后的原文失败');
+    }
+}
