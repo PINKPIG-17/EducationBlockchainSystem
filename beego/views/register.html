@@ -73,79 +73,67 @@
     </style>
 </head>
 <body>
-
-<div id="app" class="container">
+<div class="container" id="register-container"> <!-- 移除 style="display:none;" -->
     <h2>注册</h2>
-    <form @submit.prevent="handleRegister">
+    <form action="/homePage" method="post" id="register-form">
         <div class="form-group">
             <label for="register-email">邮箱</label>
-            <input id="register-email" v-model="userData.Username" required>
+            <input id="register-email" required>
         </div>
         <div class="form-group">
             <label for="register-password">密码</label>
-            <input type="password" id="register-password" v-model="userData.Password" required>
+            <input type="password" id="register-password" required>
         </div>
         <div class="form-group">
             <label for="confirm-password">确认密码</label>
-            <input type="password" id="confirm-password" v-model="confirmPassword" required>
+            <input type="password" id="confirm-password" required>
         </div>
-        <button type="submit" class="btn" :disabled="isSubmitting">注册</button>
+        <button type="submit" class="btn">注册</button>
         <div class="toggle-link">
             <p>已有账户? <a href="/" id="show-login">登录</a></p>
         </div>
     </form>
 </div>
 
-<script src="./lib/vue.js"></script>
 <script>
-    new Vue({
-        el: '#app',
-        data() {
-            return {
-                userData: {
-                    Username: '',
-                    Password: ''
-                },
-                confirmPassword: '',
-                isSubmitting: false
-            };
-        },
-        methods: {
-            handleRegister() {
-                if (this.userData.Password !== this.confirmPassword) {
-                    alert("密码和确认密码不一致,请检查后重新输入!");
-                    return;
-                }
+    //register
+    const registerForm = document.getElementById("register-form");
+    registerForm.addEventListener("submit", function(event) {
 
-                this.isSubmitting = true;
-                
-                fetch('/user/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.userData)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert("注册成功!");
-                        sessionStorage.setItem('userData', JSON.stringify(this.userData));
-                        window.location.href = "/homePage";
-                    } else {
-                        alert("注册失败，请重试！");
-                        window.location.href = "/user/toRegister";
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                })
-                .finally(() => {
-                    this.isSubmitting = false;
-                });
-            }
+        const registerEmail = document.getElementById("register-email").value;
+        const registerPassword = document.getElementById("register-password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+
+        // 验证密码和确认密码是否一致
+        if (registerPassword !== confirmPassword) {
+            alert("密码和确认密码不一致,请检查后重新输入!");
+            return; // 阻止表单提交
         }
-    });
-</script>
 
+        // 创建注册数据对象
+        const registData = {
+            Username: registerEmail,
+            Password: registerPassword
+        };
+
+        // 发送POST请求
+        fetch('/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(registData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("注册成功!");
+                    window.location.href = "/homePage";
+                } else {
+                    alert("Registration Error");
+                    window.location.href = "/user/toRegister";
+                }
+            })
+            .catch(error => console.error('Error:', error));})
+</script>
 </body>
 </html>

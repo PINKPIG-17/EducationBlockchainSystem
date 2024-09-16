@@ -15,36 +15,34 @@
             font-family: Arial, sans-serif;
         }
         .navbar {
-            border-bottom: 2px solid #e0e0e0;
-            padding: 16px;
+            border-bottom: 0.1em solid #e0e0e0;
+            padding: 1em;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1280px;
+            max-width: 90%;
             margin: 0 auto;
-            padding-left: 24px;
-            padding-right: 24px;
         }
         .logo {
-            height: 32px;
+            height: 2em;
             width: auto;
         }
         .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 1.5em;
             align-items: center;
         }
         .nav-links a {
             text-decoration: none;
             color: #333;
             transition: color 0.3s;
-            padding: 4px 8px; /* 增加内边距以创建小方框包裹效果 */
-            border: 1px solid transparent; /* 方框的边框颜色 */
-            border-radius: 4px;
+            padding: 0.25em 0.5em;
+            border: 0.1em solid transparent;
+            border-radius: 0.25em;
         }
         .nav-links a:hover {
             color: #007bff;
-            border: 1px solid #007bff; /* 方框悬停时的边框颜色 */
+            border: 0.1em solid #007bff;
         }
         .dropdown {
             position: relative;
@@ -53,23 +51,23 @@
         .dropdown-button {
             background-color: #f1f1f1;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 0.5em 1em;
+            font-size: 1em;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 0.5em;
         }
         .dropdown-content {
             display: none;
             position: absolute;
             background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            min-width: 10em;
+            box-shadow: 0px 0.5em 1em rgba(0, 0, 0, 0.2);
             z-index: 1;
-            border-radius: 5px;
+            border-radius: 0.5em;
         }
         .dropdown-content a {
             color: black;
-            padding: 12px 16px;
+            padding: 0.75em 1em;
             text-decoration: none;
             display: block;
         }
@@ -81,88 +79,89 @@
         }
         .header-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             background-color: #F7F7F8;
-            padding: 20px;
+            padding: 2em;
             flex-wrap: wrap;
+            gap: 2em;
         }
         .text-content {
-            flex: 1 1 40%;
-            padding: 20px;
+            flex: 2; /* 2份 */
+            padding: 2em;
             background-color: #F7F7F8;
         }
         .video-container {
-            flex: 1 1 60%;
+            flex: 3; /* 3份 */
             padding: 0;
-            border-radius: 32px;
+            border-radius: 2em;
             width: 100%;
-            max-width: 724px;
-            height: 480px;
+            max-width: 80%;
+            height: auto;
             margin-left: auto;
             position: relative;
         }
         .video {
             width: 100%;
             height: auto;
-            border-radius: 32px;
+            border-radius: 2em;
         }
         .header-title {
-            font-size: 56px;
-            line-height: 64px;
+            font-size: 3.5em;
+            line-height: 1.2;
             font-weight: bold;
             text-align: center;
             margin: 0;
         }
         @media (max-width: 768px) {
             .header-title {
-                font-size: 40px;
-                line-height: 48px;
+                font-size: 2.5em;
+                line-height: 1.2;
             }
         }
         @media (max-width: 480px) {
             .header-title {
-                font-size: 32px;
-                line-height: 40px;
+                font-size: 1.75em;
+                line-height: 1.2;
             }
         }
         .button-container {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 2em;
             flex-wrap: wrap;
-            margin-top: 20px;
+            margin-top: 1.5em;
         }
         .custom-button {
-            padding: 16px 32px;
-            font-size: 18px;
-            border-radius: 8px;
+            padding: 1em 2em;
+            font-size: 1.125em;
+            border-radius: 0.5em;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #007bff; /* 主按钮背景色 */
+            background-color: #007bff;
             color: #ffffff;
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .custom-button img {
-            margin-left: 8px;
+            margin-left: 0.5em;
         }
         .custom-button:hover {
-            background-color: #0056b3; /* 悬停时按钮颜色 */
+            background-color: #0056b3;
         }
         .flex-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 1em;
             padding: 0;
             list-style: none;
         }
         .flex-container li {
             background: #f0f0f0;
-            border-radius: 12px;
-            padding: 16px;
+            border-radius: 0.75em;
+            padding: 1em;
             text-align: center;
             flex: 1 1 300px;
         }
@@ -178,16 +177,20 @@
     <div class="nav-links">
         <a href="./ipfs-upload.html">上传</a>
         <a href="./ipfs-receive.html">签名</a>
-        <a href="/developers/">个人展示</a>
+        <a href="./show.html">展示</a>
     </div>
     <div class="dropdown">
         <span class="dropdown-title">个人信息</span>
         <div class="dropdown-content">
-            <a href="#">个人资料</a>
-            <a href="#">设置</a>
-            <a href="#">退出</a>
+            <a href="./information.html">个人资料</a>
+            <a href="./setting.html">设置</a>
+            <a href="./index.html">退出</a>
         </div>
+        <!-- 先随便搞张 -->
+        
     </div>
+    <img src="./img/s.jpg" style="max-width: 100%; height: auto; position: absolute; top: 0; right: 0;" alt="Responsive Image">
+
 </div>
 
 <section class="flex flex-col container">

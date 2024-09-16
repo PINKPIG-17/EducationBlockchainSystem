@@ -72,3 +72,14 @@ func (c *MainController) ToIPFSReceive() {
 func (c *MainController) ToIPFSUpload() {
 	c.TplName = "ipfs-upload.html"
 }
+func (c *MainController) Show() {
+	c.TplName = "show.html"
+}
+
+func (c *MainController) Setting() {
+	c.TplName = "setting.html"
+}
+
+func (c *MainController) Information() {
+	c.TplName = "information.html"
+}

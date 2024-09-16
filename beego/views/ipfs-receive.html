@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件签名系统</title>
+    <script src="https://unpkg.com/ipfs-http-client@60.0.1/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+    <script type="module" src="../static/js/ipfs-receive.js"></script>
     <style>
         #signButton, #rejectButton {
             display: none;
@@ -26,85 +29,21 @@
     </style>
 </head>
 <body>
-    <div id="app">
-        <h1>文件签名系统</h1>
-        <p>请输入文件的 CID 以验证其完整性：</p>
-        <input type="text" v-model="cidInput" placeholder="输入CID">
-        <button @click="getFile">获取并验证文件</button>
+<h1>文件签名系统</h1>
+<h2>当前用户的文件记录</h2>
+<ul id="userFilesList">代签名文件记录将显示在这里...</ul>
+<button id="loadUserFilesButton">代签名目录</button>
 
-        <h2>文件内容</h2>
-        <div id="fileContent">{{ fileContent || '文件内容将显示在这里...' }}</div>
+<p>请输入文件的 CID 以验证其完整性：</p>
+<input type="text" id="cidInput" placeholder="输入CID">
+<button id="getFileButton">获取并验证文件</button>
 
-        <button v-if="showSignButton" @click="signFile">签名文件</button>
-        <button v-if="showRejectButton" @click="rejectSignature">拒绝签名</button>
+<h2>文件内容</h2>
+<div id="fileContent">文件内容将显示在这里...</div>
 
-        <h2>文件列表</h2>
-        <button @click="getFilesList">获取文件列表</button>
-        <ul id="filesList">
-            <li v-for="file in filesList" :key="file.cid">{{ file.cid }}</li>
-        </ul>
-    </div>
+<h2>文件列表</h2>
+<button id="signButton">签名文件</button>
+<button id="rejectButton">拒绝签名</button>
 
-    <script src="./lib/vue.js"></script>
-    <script src="../static/js/ipfs-receive.js"></script>
-
-    <script>
-        new Vue({
-            el: '#app',
-            data() {
-                return {
-                    cidInput: '',
-                    fileContent: '',
-                    filesList: [],
-                    showSignButton: false,
-                    showRejectButton: false,
-                    fileCid: '',
-                    senderAddress: ''
-                };
-            },
-            methods: {
-                async getFile() {
-                    if (this.cidInput) {
-                        try {
-                            // 调用IPFS获取文件内容的函数
-                            const file = await getFileFromIPFS(this.cidInput);
-                            this.fileContent = file.content;
-                            this.fileCid = this.cidInput;
-                            this.senderAddress = file.senderAddress;
-                            this.showSignButton = true;
-                            this.showRejectButton = true;
-                        } catch (error) {
-                            console.error('获取文件错误:', error);
-                            alert('文件获取失败');
-                        }
-                    } else {
-                        alert('请输入 CID');
-                    }
-                },
-                async signFile() {
-                    try {
-                        await signFile(this.fileCid, this.senderAddress);
-                        alert('文件已签名');
-                    } catch (error) {
-                        console.error('签名失败:', error);
-                        alert('签名失败');
-                    }
-                },
-                rejectSignature() {
-                    const userAddress = document.getElementById('userAddress').value;
-                    rejectSignature(this.fileCid, userAddress);
-                },
-                async getFilesList() {
-                    try {
-                        const files = await getFilesFromContract();
-                        this.filesList = files;
-                    } catch (error) {
-                        console.error('获取文件列表错误:', error);
-                        alert('文件列表获取失败');
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>

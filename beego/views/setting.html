@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-header {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .settings-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .settings-section h2 {
+            font-size: 20px;
+            margin-top: 0;
+            color: #333;
+        }
+
+        .settings-section p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .settings-form label {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .settings-form input[type="text"],
+        .settings-form input[type="email"],
+        .settings-form input[type="password"],
+        .settings-form select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .settings-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .settings-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .notification-settings input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <header class="settings-header">
+            <h1>设置</h1>
+        </header>
+
+        <section class="settings-section">
+            <h2>个人信息</h2>
+            <form class="settings-form">
+                <label for="username">用户名:</label>
+                <input type="text" id="username" name="username" value="张三">
+
+                <label for="email">电子邮件:</label>
+                <input type="email" id="email" name="email" value="example@example.com">
+
+                <button type="submit">保存更改</button>
+            </form>
+        </section>
+
+        <section class="settings-section">
+            <h2>更改密码</h2>
+            <form class="settings-form">
+                <label for="current-password">当前密码:</label>
+                <input type="password" id="current-password" name="current-password">
+
+                <label for="new-password">新密码:</label>
+                <input type="password" id="new-password" name="new-password">
+
+                <label for="confirm-password">确认新密码:</label>
+                <input type="password" id="confirm-password" name="confirm-password">
+
+                <button type="submit">更改密码</button>
+            </form>
+        </section>
+
+        <section class="settings-section">
+            <h2>通知设置</h2>
+            <div class="notification-settings">
+                <label>
+                    <input type="checkbox" id="email-notifications" name="email-notifications" checked>
+                    通过电子邮件接收通知
+                </label>
+                <label>
+                    <input type="checkbox" id="sms-notifications" name="sms-notifications">
+                    通过短信接收通知
+                </label>
+            </div>
+            <button type="submit">保存设置</button>
+        </section>
+    </div>
+</body>
+</html>

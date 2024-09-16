@@ -14,4 +14,7 @@ func init() {
 	beego.Router("/user/register", &controllers.MainController{}, "post:Register")
 	beego.Router("/ipfs-receive", &controllers.MainController{}, "get:ToIPFSReceive")
 	beego.Router("/ipfs-upload", &controllers.MainController{}, "get:ToIPFSUpload")
+	beego.Router("/show", &controllers.MainController{}, "get:Show")
+	beego.Router("/setting", &controllers.MainController{}, "get:Setting")
+	beego.Router("/information", &controllers.MainController{}, "get:Information")
 }

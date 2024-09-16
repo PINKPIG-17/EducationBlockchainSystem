@@ -74,64 +74,50 @@
 </head>
 <body>
 
-<div id="app" class="container">
+<div class="container">
     <h2>登录</h2>
-    <form @submit.prevent="handleSubmit">
+    <form action="/homePage" method="post" id="login-form" >
         <div class="form-group">
             <label for="login-email">邮箱</label>
-            <input id="login-email" v-model="userData.Username" required>
+            <input id="login-email" required>
         </div>
         <div class="form-group">
             <label for="login-password">密码</label>
-            <input type="password" id="login-password" v-model="userData.Password" required>
+            <input type="password" id="login-password" required>
         </div>
-        <button type="submit" class="btn" :disabled="isSubmitting">登录</button>
+        <button type="submit" class="btn" id="login-button">登录</button>
         <div class="toggle-link">
             <p>还没有账户? <a href="/user/toRegister" id="show-register">注册</a></p>
         </div>
     </form>
 </div>
 
-<script src="./lib/vue.js"></script>
 <script>
-    new Vue({
-        el: '#app',
-        data() {
-            return {
-                userData: {
-                    Username: '',
-                    Password: ''
-                },
-                isSubmitting: false
-            };
-        },
-        methods: {
-            handleSubmit() {
-                this.isSubmitting = true;
+    //login
+    const loginForm = document.getElementById("login-form");
+    loginForm.addEventListener("submit", function(event) {
+        const userData = {
+            Username: document.getElementById('login-email').value,
+            Password: document.getElementById('login-password').value
+        };
 
-                fetch('/user/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.userData)
-                })
-                .then(response => {
-                    if (response.ok) {
-                        sessionStorage.setItem('userData', JSON.stringify(this.userData));
-                        window.location.href = "/homePage";
-                    } else {
-                        alert("Invalid username or password");
-                        window.location.href = "/";
-                    }
-                })
-                .catch(error => console.error('Error:', error))
-                .finally(() => {
-                    this.isSubmitting = false;
-                });
-            }
-        }
-    });
+        fetch('/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        })
+            .then(response => {
+                if (response.ok) {
+                    sessionStorage.setItem('userData', JSON.stringify(userData));
+                    window.location.href = "/homePage";
+                } else {
+                    alert("Invalid username or password");
+                    window.location.href = "/";
+                }
+            })
+            .catch(error => console.error('Error:', error));})
 </script>
 
 </body>
