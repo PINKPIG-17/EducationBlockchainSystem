@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 通用样式 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 用户信息样式 */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* 间距 */
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* 个人资料、上传头像、退出登录按钮样式 */
+        .user-actions a {
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .user-actions a:hover {
+            background-color: #0056b3;
+        }
+
+        /* 主内容样式 */
+        main {
+            padding: 20px;
+        }
+
+        /* 欢迎消息样式 */
+        .welcome-message {
+            font-size: 24px;
+            color: #333;
+        }
+
+        /* 功能区域样式 */
+        .features {
+            margin-top: 30px;
+        }
+
+        .feature {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .feature h3 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+<header class="navbar">
+    <!-- 左侧 Logo 或标题 -->
+    <div class="logo">
+        <h2>学籍信息管理</h2>
+    </div>
+
+    <!-- 右侧用户信息 -->
+    <div class="user-info" id="user-info">
+        <!-- 用户头像 -->
+        <img src="{{if .User.Avatar}}{{.User.Avatar}}{{else}}/static/img/default_avatar.png{{end}}" alt="User Avatar" class="avatar">
+        <!-- 用户名 -->
+        <span id="username">{{.User.Address}}</span>
+        <!-- 个人资料、上传头像、退出登录按钮 -->
+        <div class="user-actions">
+            <a href="/profile">个人资料</a>
+            <a href="/uploadAvatar">上传头像</a>
+            <a href="/logout">退出登录</a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <h1 class="welcome-message">欢迎回来，{{.User.Address}}！</h1>
+    <p>这是您的主页，您可以在这里访问各种功能。</p>
+
+    <div class="features">
+        <div class="feature">
+            <h3>上传</h3>
+            <p>上传你的个人信息</p>
+            <button class="feature-button" onclick="location.href='/messagePost'">进入</button>
+        </div>
+        <div class="feature">
+            <h3>功能二</h3>
+            <p>这里是功能二的描述。</p>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>

@@ -3,17 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>登录</title>
+    <title>提交信息表单</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            /* 移除原有的水平和垂直居中，使页面布局更灵活 */
             margin: 0;
+            padding: 0;
         }
         .container {
             background: white;
@@ -21,6 +19,8 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             width: 400px;
             padding: 20px;
+            margin: 80px auto; /* 上下外边距，水平居中 */
+            position: relative; /* 为了定位右上角的按钮 */
         }
         h2 {
             text-align: center;
@@ -34,14 +34,14 @@
             margin-bottom: 5px;
             color: #555;
         }
-        .form-group input {
+        .form-group input, .form-group textarea {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
         }
-        .form-group input:focus {
+        .form-group input:focus, .form-group textarea:focus {
             border-color: #007bff;
             outline: none;
         }
@@ -59,66 +59,61 @@
         .btn:hover {
             background-color: #0056b3;
         }
-        .toggle-link {
+        /* 提示信息样式 */
+        .message {
             text-align: center;
-            margin-top: 15px;
+            font-size: 16px;
+            margin-bottom: 15px;
         }
-        .toggle-link a {
-            color: #007bff;
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+        /* 返回主页面的按钮样式 */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
             text-decoration: none;
         }
-        .toggle-link a:hover {
-            text-decoration: underline;
+        .back-button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
+<!-- 返回主页面的按钮 -->
+<a href="/home" class="back-button">返回主页</a>
 
 <div class="container">
-    <h2>登录</h2>
-    <form action="/homePage" method="post" id="login-form" >
+    <h2>提交信息</h2>
+    <!-- 显示提示信息 -->
+    {{if .Message}}
+    <div class="message {{.MessageType}}">
+        {{.Message}}
+    </div>
+    {{end}}
+    <form action="/messagePost" method="post">
         <div class="form-group">
-            <label for="login-email">邮箱</label>
-            <input id="login-email" required>
+            <label for="address">Your Address:</label>
+            <input type="text" id="address" name="address" required>
         </div>
         <div class="form-group">
-            <label for="login-password">密码</label>
-            <input type="password" id="login-password" required>
+            <label for="text">Text:</label>
+            <textarea id="text" name="text" rows="4" cols="50" required></textarea>
         </div>
-        <button type="submit" class="btn" id="login-button">登录</button>
-        <div class="toggle-link">
-            <p>还没有账户? <a href="/user/toRegister" id="show-register">注册</a></p>
-        </div>
+        <button type="submit" class="btn">提交</button>
     </form>
 </div>
-
-<script>
-    //login
-    const loginForm = document.getElementById("login-form");
-    loginForm.addEventListener("submit", function(event) {
-    const userData = {
-    Username: document.getElementById('login-email').value,
-    Password: document.getElementById('login-password').value
-    };
-
-    fetch('/user/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    })
-    .then(response => {
-    if (response.ok) {
-        sessionStorage.setItem('userData', JSON.stringify(userData));
-        window.location.href = "/homePage";
-    } else {
-        alert("Invalid username or password");
-        window.location.href = "/";
-    }
-    })
-    .catch(error => console.error('Error:', error));})
-</script>
-
 </body>
 </html>

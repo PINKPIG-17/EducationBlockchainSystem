@@ -1,110 +1,130 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>主页</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
-    .navbar {
-        background-color: #333;
-        color: white;
-        padding: 15px;
-        display: flex;
-        align-items: center;
-    }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between; /* 使内容两边对齐 */
+            align-items: center;
+        }
 
-    .user-info {
-        position: relative;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-    }
+        .user-info {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
 
-    .other-info {
-        cursor: pointer;
-    }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
 
-    .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
 
-    .dropdown {
-        display: none;
-        position: absolute;
-        top: 50px;
-        left: 0;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        z-index: 1;
-    }
+        .dropdown-content {
+            display: flex;
+            flex-direction: column;
+        }
 
-    .dropdown-content {
-        display: flex;
-        flex-direction: column;
-    }
+        .dropdown-content a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+        }
 
-    .dropdown-content a {
-        padding: 10px 15px;
-        text-decoration: none;
-        color: #333;
-    }
+        .dropdown-content a:hover {
+            background-color: #f0f0f0;
+        }
 
-    .dropdown-content a:hover {
-        background-color: #f0f0f0;
-    }
+        .user-info:hover .dropdown {
+            display: block;
+        }
 
-    .user-info:hover .dropdown {
-        display: block;
-    }
+        main {
+            padding: 20px;
+        }
 
-    main {
-        padding: 20px;
-    }
+        /* 新增的登录注册按钮样式 */
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .auth-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
-    <body>
-    <header class="navbar">
-        <div class="user-info" id="user-info">
-            <img src="static/image/Monel.jpeg" alt="User Avatar" class="avatar">
-            <span id="username"></span>
-            <div class="dropdown">
-                <div class="dropdown-content">
-                    <a href="#">User Settings</a>
-                    <a href="#">Profile Details</a>
-                </div>
+<body>
+<header class="navbar">
+    <div class="user-info" id="user-info">
+        <!--        <img src="static/image/Monel.jpeg" alt="User Avatar" class="avatar">-->
+        <span id="username"></span>
+        <div class="dropdown">
+            <div class="dropdown-content">
+                <a href="#">User Settings</a>
+                <a href="#">Profile Details</a>
             </div>
         </div>
-        <div class="other-info" id="other-info">
-            <span id="upload"><a href="/ipfs-upload">upload</a></span>
-            <span id="receive"><a href="/ipfs-receive">receive</a></span>
-        </div>
-    </header>
+    </div>
+    <!-- 新增的登录/注册按钮 -->
+    <div class="auth-buttons">
+        <a href="/login" class="auth-button">登录</a>
+        <a href="/register" class="auth-button">注册</a>
+    </div>
+</header>
 
-    <main>
-        <h1>Welcome to the Home Page</h1>
-        <p>This is the main content area.</p>
-    </main>
+<main>
+    <h1>Welcome to the Home Page</h1>
+    <p>This is the main content area.</p>
+</main>
 
-    <script>
-            // script.js
-     window.onload = function() {
-    const userData = JSON.parse(sessionStorage.getItem('userData'));
-    if (userData) {
-        console.log('User Data:', userData);
-        document.getElementById('username').innerText = `Welcome, ${userData.Username}!`;
+<script>
+    // script.js
+    window.onload = function() {
+        const userData = JSON.parse(sessionStorage.getItem('userData'));
+        if (userData) {
+            console.log('User Data:', userData);
+            document.getElementById('username').innerText = `Welcome, ${userData.Username}!`;
         }
     };
     document.addEventListener('DOMContentLoaded', function() {
@@ -122,278 +142,6 @@
             }
         });
     });
-    </script>
-</body>
-</html> -->
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#3478F6">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="GetBlock.io">
-    <meta property="og:image" content="https://getblock.io/meta_main.png">
-    <title>homepage</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-        .navbar {
-            border-bottom: 2px solid #e0e0e0;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1280px;
-            margin: 0 auto;
-            padding-left: 24px;
-            padding-right: 24px;
-        }
-        .logo {
-            height: 32px;
-            width: auto;
-        }
-        .nav-links {
-            display: flex;
-            gap: 24px;
-            align-items: center;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: #333;
-            transition: color 0.3s;
-            padding: 4px 8px; /* 增加内边距以创建小方框包裹效果 */
-            border: 1px solid transparent; /* 方框的边框颜色 */
-            border-radius: 4px;
-        }
-        .nav-links a:hover {
-            color: #007bff;
-            border: 1px solid #007bff; /* 方框悬停时的边框颜色 */
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-button {
-            background-color: #f1f1f1;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 1;
-            border-radius: 5px;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #F7F7F8;
-            padding: 20px;
-            flex-wrap: wrap;
-        }
-        .text-content {
-            flex: 1 1 40%;
-            padding: 20px;
-            background-color: #F7F7F8;
-        }
-        .video-container {
-            flex: 1 1 60%;
-            padding: 0;
-            border-radius: 32px;
-            width: 100%;
-            max-width: 724px;
-            height: 480px;
-            margin-left: auto;
-            position: relative;
-        }
-        .video {
-            width: 100%;
-            height: auto;
-            border-radius: 32px;
-        }
-        .header-title {
-            font-size: 56px;
-            line-height: 64px;
-            font-weight: bold;
-            text-align: center;
-            margin: 0;
-        }
-        @media (max-width: 768px) {
-            .header-title {
-                font-size: 40px;
-                line-height: 48px;
-            }
-        }
-        @media (max-width: 480px) {
-            .header-title {
-                font-size: 32px;
-                line-height: 40px;
-            }
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        .custom-button {
-            padding: 16px 32px;
-            font-size: 18px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #007bff; /* 主按钮背景色 */
-            color: #ffffff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .custom-button img {
-            margin-left: 8px;
-        }
-        .custom-button:hover {
-            background-color: #0056b3; /* 悬停时按钮颜色 */
-        }
-        .flex-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            padding: 0;
-            list-style: none;
-        }
-        .flex-container li {
-            background: #f0f0f0;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            flex: 1 1 300px;
-        }
-    </style>
-</head>
-
-<body>
-<div class="navbar">
-    <a href="/">
-        <img alt="GetBlock.io" class="logo"
-             src="https://learnblockchain.cn/article/9329">
-    </a>
-    <div class="nav-links">
-        <a href="./ipfs-upload.html">上传</a>
-        <a href="./ipfs-receive.html">签名</a>
-        <a href="/developers/">个人展示</a>
-    </div>
-    <div class="dropdown">
-        <span class="dropdown-title">个人信息</span>
-        <div class="dropdown-content">
-            <a href="#">个人资料</a>
-            <a href="#">设置</a>
-            <a href="#">退出</a>
-        </div>
-    </div>
-</div>
-
-<section class="flex flex-col container">
-    <header class="header-container">
-        <div class="text-content">
-            <h1 class="header-title">Educate in Web3
-                <br>with IPFS nodes.
-                <br>Block by Block</h1>
-
-            <div class="button-container">
-                <a href="https://learnblockchain.cn/article/1792" target="_blank">
-                    <button class="custom-button">
-                        <span>登链社区</span>
-                        <img alt="arrow-up-right"
-                             src="https://storage.getblock.io/web/getblock-ui-kit/icons/arrow-up-right.svg"
-                             width="24" height="24">
-                    </button>
-                </a>
-
-                <a href="https://learnblockchain.cn/article/7074" target="_blank">
-                    <button class="custom-button">
-                        <span>Read docs</span>
-                        <img alt="arrow-up-right"
-                             src="https://storage.getblock.io/web/getblock-ui-kit/icons/arrow-up-right.svg"
-                             width="24" height="24">
-                    </button>
-                </a>
-            </div>
-        </div>
-
-        <div class="video-container">
-
-            <video class="video"
-                   poster="/_nuxt/homepage.5bb829fe.svg"
-                   loop
-                   autoplay
-                   muted
-                   preload="auto"
-                   src="https://storage.getblock.io/web/web/images/index/video/home_page.mp4">
-            </video>
-
-        </div>
-    </header>
-
-    <ul class="flex-container">
-        <li>
-            <div class="flex flex-col gap-2 items-center">
-                <div class="flex flex-row gap-2 items-center">
-                    <img alt="coins-01"
-                         src="https://storage.getblock.io/web/getblock-ui-kit/icons/coins-01.svg"
-                         width="24" height="24">
-                    <p class="text-2xl leading-8 font-bold">50+</p>
-                </div>
-                <p>Blockchain protocols</p>
-            </div>
-        </li>
-        <li>
-            <div class="flex flex-col gap-2 items-center">
-                <div class="flex flex-row gap-2 items-center">
-                    <img alt="speedometer-03"
-                         src="https://storage.getblock.io/web/getblock-ui-kit/icons/speedometer-03.svg"
-                         width="24" height="24">
-                    <p class="text-2xl leading-8 font-bold">99.9%+</p>
-                </div>
-                <p>Service availability</p>
-            </div>
-        </li>
-        <li>
-            <div class="flex flex-col gap-2 items-center">
-                <div class="flex flex-row gap-2 items-center">
-                    <img alt="headphones-01"
-                         src="https://storage.getblock.io/web/getblock-ui-kit/icons/headphones-01.svg"
-                         width="24" height="24">
-                    <p class="text-2xl leading-8 font-bold">24/7</p>
-                </div>
-                <p>Support service</p>
-            </div>
-        </li>
-    </ul>
-</section>
+</script>
 </body>
 </html>

@@ -8,42 +8,142 @@
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
     <script type="module" src="../static/js/ipfs-receive.js"></script>
     <style>
-        #signButton, #rejectButton {
-            display: none;
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
         }
+
+        body {
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        h2 {
+            color: #007bff;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #getFileButton, #loadUserFilesButton {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #signButton {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #rejectButton {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
         #fileContent {
             margin-top: 20px;
-            padding: 10px;
+            padding: 20px;
             border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            min-height: 100px;
             white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
         }
-        #filesList {
+
+        #filesList, #userFilesList {
             margin-top: 20px;
-            padding: 10px;
+            padding: 20px;
             border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
             list-style-type: none;
+        }
+
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            button {
+                width: 100%;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
 <body>
-<h1>文件签名系统</h1>
-<h2>当前用户的文件记录</h2>
-<ul id="userFilesList">代签名文件记录将显示在这里...</ul>
-<button id="loadUserFilesButton">代签名目录</button>
+<div class="container">
+    <h1>文件签名系统</h1>
 
-<p>请输入文件的 CID 以验证其完整性：</p>
-<input type="text" id="cidInput" placeholder="输入CID">
-<button id="getFileButton">获取并验证文件</button>
+    <h2>当前用户的文件记录</h2>
+    <ul id="userFilesList">代签名文件记录将显示在这里...</ul>
+    <button id="loadUserFilesButton">加载代签名目录</button>
 
-<h2>文件内容</h2>
-<div id="fileContent">文件内容将显示在这里...</div>
+    <p>请输入文件的 CID 以验证其完整性：</p>
+    <input type="text" id="cidInput" placeholder="输入CID">
+    <button id="getFileButton">获取并验证文件</button>
 
-<h2>文件列表</h2>
-<button id="signButton">签名文件</button>
-<button id="rejectButton">拒绝签名</button>
+    <h2>文件内容</h2>
+    <div id="fileContent">文件内容将显示在这里...</div>
 
+    <h2>文件操作</h2>
+    <form action="/receive" method="post"><button id="signButton">签名文件</button></form>
+    <button id="rejectButton">拒绝签名</button>
+</div>
 </body>
 </html>
