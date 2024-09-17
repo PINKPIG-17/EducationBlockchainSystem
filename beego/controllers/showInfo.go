@@ -10,7 +10,7 @@ type ShowInfoController struct {
 	beego.Controller
 }
 
-func (c *AddrToCryptoController) ShowDataByAddress() {
+func (c *ShowInfoController) ShowDataByAddress() {
 	// 获取用户输入的地址
 	address := c.GetString("address")
 	if address == "" {
