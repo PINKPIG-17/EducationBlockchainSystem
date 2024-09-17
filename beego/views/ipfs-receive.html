@@ -8,42 +8,167 @@
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
     <script type="module" src="../static/js/ipfs-receive.js"></script>
     <style>
-        #signButton, #rejectButton {
-            display: none;
-            margin: 10px;
-            padding: 10px;
-            font-size: 16px;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
+
+        body {
+            background-color: #f4f4f4;
+            padding: 5vh 2vw;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 60vw;
+            padding: 3vh 2vw;
+            border-radius: 1vw;
+            box-shadow: 0 2vw 5vw rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 3vh;
+            font-size: 2.5vw;
+        }
+
+        h2 {
+            color: #007bff;
+            font-size: 2vw;
+            margin-bottom: 2vh;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1.5vh 1vw;
+            margin: 1.5vh 0;
+            border-radius: 0.5vw;
+            border: 0.1vw solid #ddd;
+            font-size: 1.2vw;
+        }
+
+        button {
+            padding: 1.5vh 2vw;
+            border: none;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            font-size: 1.2vw;
+        }
+
+        #getFileButton, #loadUserFilesButton {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #signButton {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #rejectButton {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
         #fileContent {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
+            margin-top: 3vh;
+            padding: 3vh 2vw;
+            border: 0.1vw solid #ccc;
+            border-radius: 0.5vw;
+            background-color: #f9f9f9;
+            min-height: 20vh;
             white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2vw;
         }
-        #filesList {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ccc;
+
+        #filesList, #userFilesList {
+            margin-top: 3vh;
+            padding: 3vh 2vw;
+            border: 0.1vw solid #ccc;
+            border-radius: 0.5vw;
+            background-color: #f9f9f9;
             list-style-type: none;
+        }
+
+        li {
+            margin-bottom: 2vh;
+            padding: 1.5vh 2vw;
+            background-color: #eee;
+            border-radius: 0.5vw;
+            font-size: 1.2vw;
+        }
+
+        /* 添加返回主页按钮的样式 */
+        .back-home {
+            position: absolute;
+            top: 2vh;
+            right: 2vw;
+            padding: 1.5vh 2vw;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0.5vw;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.2vw;
+        }
+
+        .back-home:hover {
+            background-color: #0056b3;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 5vh 4vw;
+                max-width: 90vw;
+            }
+
+            button {
+                width: 100%;
+                margin: 1.5vh 0;
+            }
         }
     </style>
 </head>
 <body>
-<h1>文件签名系统</h1>
-<h2>当前用户的文件记录</h2>
-<ul id="userFilesList">代签名文件记录将显示在这里...</ul>
-<button id="loadUserFilesButton">代签名目录</button>
 
-<p>请输入文件的 CID 以验证其完整性：</p>
-<input type="text" id="cidInput" placeholder="输入CID">
-<button id="getFileButton">获取并验证文件</button>
+<!-- 返回主页按钮 -->
+<a href="./homePage.html" class="back-home">返回主页</a>
 
-<h2>文件内容</h2>
-<div id="fileContent">文件内容将显示在这里...</div>
+<div class="container">
+    <h1>文件签名系统</h1>
 
-<h2>文件列表</h2>
-<button id="signButton">签名文件</button>
-<button id="rejectButton">拒绝签名</button>
+    <h2>当前用户的文件记录</h2>
+    <ul id="userFilesList">代签名文件记录将显示在这里...</ul>
+    <button id="loadUserFilesButton">加载代签名目录</button>
+
+    <p>请输入文件的 CID 以验证其完整性：</p>
+    <input type="text" id="cidInput" placeholder="输入CID">
+    <button id="getFileButton">获取并验证文件</button>
+
+    <h2>文件内容</h2>
+    <div id="fileContent">文件内容将显示在这里...</div>
+
+    <h2>文件操作</h2>
+    <form action="/receive" method="post">
+        <button id="signButton">签名文件</button>
+    </form>
+    <button id="rejectButton">拒绝签名</button>
+</div>
 
 </body>
 </html>

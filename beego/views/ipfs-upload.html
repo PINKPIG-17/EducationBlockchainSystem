@@ -8,31 +8,137 @@
     <script src="https://unpkg.com/ipfs-http-client@60.0.1/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
     <script src="../static/js/ipfs-upload.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 50vw; /* 设置为 50% 的视口宽度 */
+            width: 100%;
+            padding: 5%;
+            border-radius: 1%;
+            box-shadow: 0 5% 15% rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 5%;
+            font-size: 2vw; /* 根据视口宽度来调整字体大小 */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 2%;
+            color: #555;
+            font-size: 1.25vw;
+            text-align: left;
+        }
+
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 1.5%;
+            margin-bottom: 4%;
+            border: 0.1vw solid #ddd;
+            border-radius: 0.5vw;
+            font-size: 1.25vw;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 1.5% 3%;
+            border: none;
+            border-radius: 0.5vw;
+            font-size: 1.25vw;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 1.15vw;
+            color: #333;
+            word-wrap: break-word;
+            background-color: #f9f9f9;
+            padding: 2%;
+            border-radius: 0.5vw;
+            border: 0.1vw solid #ddd;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 5%;
+                width: 90vw;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+
+        /* 返回主页按钮 */
+        .back-home {
+            position: absolute;
+            top: 2%;
+            right: 2%;
+            padding: 1% 2%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 0.5vw;
+            font-size: 1.15vw;
+            cursor: pointer;
+        }
+
+        .back-home:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<h1>上传 .txt 文件并存储 CID</h1>
+<!-- 返回主页按钮 -->
+<button class="back-home" onclick="window.location.href='./homePage.html';">返回主页</button>
 
-<!-- 文件上传区域 -->
-<label for="fileInput">选择一个 .txt 文件：</label>
-<input type="file" id="fileInput" accept=".txt">
-<br><br>
+<div class="container">
+    <h1>上传 .txt 文件并存储 CID</h1>
 
-<!-- 区块链地址输入 -->
-<label for="userAddress">请输入您的地址：</label>
-<input type="text" id="userAddress" placeholder="0xYourAddress">
-<br><br>
+    <!-- 文件上传区域 -->
+    <label for="fileInput">选择一个 .txt 文件：</label>
+    <input type="file" id="fileInput" accept=".txt">
 
-<!-- 上传和存储按钮 -->
-<button onclick="main()">上传到 IPFS 并存储 CID</button>
-<br><br>
+    <!-- 区块链地址输入 -->
+    <label for="userAddress">请输入您的地址：</label>
+    <input type="text" id="userAddress" placeholder="0xYourAddress">
 
-<!-- 显示 CID -->
-<label for="cidOutput">文件的 CID：</label>
-<p id="cidOutput"></p>
+    <!-- 上传和存储按钮 -->
+    <button onclick="main()">上传到 IPFS 并存储 CID</button>
 
-<!-- 显示哈希摘要 -->
-<label for="digestOutput">文件的哈希摘要：</label>
-<p id="digestOutput"></p>
+    <!-- 显示 CID -->
+    <label for="cidOutput">文件的 CID：</label>
+    <p id="cidOutput">CID 将显示在这里...</p>
 
+    <!-- 显示哈希摘要 -->
+    <label for="digestOutput">文件的哈希摘要：</label>
+    <p id="digestOutput">哈希摘要将显示在这里...</p>
+</div>
 </body>
 </html>

@@ -66,7 +66,7 @@ func (c *MainController) ToHomePage() {
 }
 
 func (c *MainController) ToIPFSReceive() {
-	c.TplName = "ipfs-recive.html"
+	c.TplName = "ipfs-receive.html"
 }
 
 func (c *MainController) ToIPFSUpload() {

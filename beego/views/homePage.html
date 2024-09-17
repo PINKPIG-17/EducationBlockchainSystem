@@ -145,6 +145,15 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+        .custom-button a {
+            text-decoration: none; /* 去除下划线 */
+        }
+
+        .custom-button {
+            display: inline-flex; /* 确保按钮和内容在同一行 */
+            text-align: center; /* 确保按钮内文本居中 */
+        }
+
         .custom-button img {
             margin-left: 0.5em;
         }
@@ -165,14 +174,67 @@
             text-align: center;
             flex: 1 1 300px;
         }
+
+        .custom-button a {
+    text-decoration: none; /* 去除下划线 */
+}
+
+        /*新填样式*/
+        /*加入小图标的css*/
+        .flex-container,
+        .list-of-partners {
+            width: 100%; /* 确保每个 ul 占据整行 */
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; /*确保子项在行内换行 */
+            justify-content: center; /* 居中显示 */
+            list-style: none; /* 去掉小点 */
+           
+            gap: 3rem; 
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* 垂直排列两个 ul */
+            align-items: center;
+        }
+        .list-of-partners {
+            display: flex;
+            flex-direction: row; /* 让子元素按行排列 */
+            flex-wrap: wrap; /* 如果元素太多，可以换行 */
+            justify-content: center; /*居中对齐 */
+            gap: 3rem; /* 调整图标之间的间距 */
+        }
+        .list-of-partners li {
+            transition: transform 0.3s, filter 0.3s;
+        }
+
+        .list-of-partners li:hover {
+            transform: scale(1.1); /* 使图标稍微放大 */
+        }
+
+        .list-of-partners a {
+            display: block;
+            transition: filter 0.3s; /* 过渡效果 */
+        }
+
+        .list-of-partners a:hover .partner-icon {
+            filter: brightness(0) saturate(100%) invert(35%) sepia(100%) saturate(600%) hue-rotate(193deg) brightness(100%) contrast(100%); /* 颜色滤镜调整，蓝色效果 */
+        }
+        
+        .partner-icon {
+            width: 100%; /* 确保图标适应其容器的宽度 */
+            height: auto; /* 维持图标的比例 */
+        }
+        
     </style>
 </head>
 
 <body>
 <div class="navbar">
     <a href="/">
+<!--          src="https://learnblockchain.cn/article/9329">-->
         <img alt="GetBlock.io" class="logo"
-             src="https://learnblockchain.cn/article/9329">
+             src="/static/image/dragon_icon.jpg">
     </a>
     <div class="nav-links">
         <a href="./ipfs-upload.html">上传</a>
@@ -187,9 +249,9 @@
             <a href="./index.html">退出</a>
         </div>
         <!-- 先随便搞张 -->
-        
+
     </div>
-    <img src="./img/s.jpg" style="max-width: 100%; height: auto; position: absolute; top: 0; right: 0;" alt="Responsive Image">
+    <img src="/static/image/s.jpg" style="max-width: 100%; height: auto; position: absolute; top: 0; right: 1%; border-radius: 50%;" alt="Responsive Image">
 
 </div>
 
@@ -270,6 +332,41 @@
             </div>
         </li>
     </ul>
+
+<!--今日新添小图标-->
+<ul class="list-of-partners flex flex-row items-center justify-center md:justify-start sm:justify-start xs:justify-start gap-12 sm:gap-6 xs:gap-6 lg:overflow-auto md:overflow-auto sm:overflow-auto xs:overflow-auto py-16 sm:py-8 xs:py-8" data-v-d6526bd7="">
+    <li class="h-10 sm:h-8 xs:h-8 shrink-0 flex items-center justify-center" data-v-d6526bd7="">
+        <a href="https://chain.link/" target="_blank">
+            <img alt="Partner 1" class="partner-icon" src="https://storage.getblock.io/web/web/images/index/partners/partner-1.svg" data-v-d6526bd7="">
+        </a>
+    </li>
+    <li class="h-10 sm:h-8 xs:h-8 shrink-0 flex items-center justify-center" data-v-d6526bd7="">
+        <a href="https://www.elliptic.co/" target="_blank">
+            <img alt="Partner 2" class="partner-icon" src="https://storage.getblock.io/web/web/images/index/partners/partner-2.svg" data-v-d6526bd7="">
+        </a>
+    </li>
+    <li class="h-10 sm:h-8 xs:h-8 shrink-0 flex items-center justify-center" data-v-d6526bd7="">
+        <a href="https://trustwallet.com/?utm_source=cryptwerk" target="_blank">
+            <img alt="Partner 3" class="partner-icon" src="https://storage.getblock.io/web/web/images/index/partners/partner-3.svg" data-v-d6526bd7="">
+        </a>
+    </li>
+    <li class="h-10 sm:h-8 xs:h-8 shrink-0 flex items-center justify-center" data-v-d6526bd7="">
+        <a href="https://near.org/" target="_blank">
+            <img alt="Partner 4" class="partner-icon" src="https://storage.getblock.io/web/web/images/index/partners/partner-4.svg" data-v-d6526bd7="">
+        </a>
+    </li>
+    <li class="h-10 sm:h-8 xs:h-8 shrink-0 flex items-center justify-center" data-v-d6526bd7="">
+        <a href="https://ton.org/" target="_blank">
+            <img alt="Partner 5" class="partner-icon" src="https://storage.getblock.io/web/web/images/index/partners/partner-5.svg" data-v-d6526bd7="">
+        </a>
+    </li>
+    <li class="h-10 sm:h-8 xs:h-8 shrink-0 flex items-center justify-center" data-v-d6526bd7="">
+        <a href="https://tron.network/" target="_blank">
+            <img alt="Partner 6" class="partner-icon" src="https://storage.getblock.io/web/web/images/index/partners/partner-6.svg" data-v-d6526bd7="">
+        </a>
+    </li>
+</ul>
+
 </section>
 </body>
 </html>
