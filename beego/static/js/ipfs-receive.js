@@ -436,12 +436,6 @@ async function getFileFromIPFS(cid) {
     }
 }
 
-//公钥加密
-async function encryptWithSenderPublicKey(senderAddress, message) {
-    // 假设你有一个加密函数，这里使用 senderAddress 作为公钥
-    // 返回加密后的密文
-    return `Encrypted(${message}) with ${senderAddress}`;
-}
 
 async function storeUserInfo(senderAddress, cid, signature) {
     try {
@@ -484,7 +478,6 @@ async function deleteCid(cid, userAddress) {
         alert(`删除失败: ${error.message}`);
     }
 }
-
 
 window.onload = function() {
     // 绑定“加载用户文件”按钮的点击事件
@@ -595,5 +588,68 @@ async function sendToSQL(cid, senderAddress, signature, digest) {
     } catch (error) {
         console.error('存储加密后的原文失败:', error);
         throw new Error('存储加密后的原文失败');
+    }
+}
+
+//公钥加密
+const EC = elliptic.ec;
+const ec = new EC('secp256k1');
+
+async function encryptWithSenderPublicKey(senderAddress, message) {
+    try {
+        // 调用 getPublicKeyFromSenderAddress 获取公钥
+        const publicKeyHex = await getPublicKeyFromSenderAddress(senderAddress);
+
+        // 将公钥转换为 elliptic 公钥对象
+        const publicKey = ec.keyFromPublic(publicKeyHex.slice(2), 'hex').getPublic();
+
+        // 使用公钥生成共享密钥
+        const sharedKey = ec.genKeyPair().derive(publicKey);
+
+        // 将消息编码为十六进制
+        const encodedMessage = Buffer.from(message).toString('hex');
+
+        // 使用共享密钥进行简单的 XOR 加密
+        const encryptedMessage = (BigInt('0x' + encodedMessage) ^ BigInt(sharedKey.toString(16))).toString(16);
+
+        // 返回加密后的消息
+        return encryptedMessage;
+    } catch (error) {
+        console.error('加密失败:', error);
+        throw new Error(`加密失败: ${error.message}`);
+    }
+}
+
+
+async function getPublicKeyFromSenderAddress(senderAddress) {
+    try {
+        // 创建 BrowserProvider
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        
+        // 请求用户授权并连接 MetaMask
+        await provider.send("eth_requestAccounts", []);
+        
+        // 获取签名者（MetaMask 当前账户）
+        const signer = await provider.getSigner();
+        const userAddress = await signer.getAddress();
+
+        if (userAddress.toLowerCase() !== senderAddress.toLowerCase()) {
+            throw new Error("当前用户地址与提供的 senderAddress 不匹配");
+        }
+
+        // 定义签名消息（可以是任意消息，用来从签名中提取公钥）
+        const message = "Get public key from MetaMask";
+
+        // 请求用户签名消息
+        const signature = await signer.signMessage(message);
+
+        // 从签名中恢复公钥
+        const publicKeyHex = ethers.utils.recoverPublicKey(ethers.hashMessage(message), signature);
+
+        console.log("恢复的公钥:", publicKeyHex);
+        return publicKeyHex;  // 返回公钥
+    } catch (error) {
+        console.error('获取公钥失败:', error);
+        throw new Error(`获取公钥失败: ${error.message}`);
     }
 }
