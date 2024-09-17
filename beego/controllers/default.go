@@ -3,7 +3,6 @@ package controllers
 import (
 	"beego/service"
 	"encoding/json"
-
 	beego "github.com/beego/beego/v2/server/web"
 )
 
@@ -14,7 +13,8 @@ type MainController struct {
 }
 
 func (c *MainController) Index() {
-	c.TplName = "index.html"
+
+	c.TplName = "homePage.html"
 }
 
 func (c *MainController) Login() {
@@ -63,12 +63,4 @@ func (c *MainController) Register() {
 func (c *MainController) ToHomePage() {
 	c.TplName = "homePage.html"
 
-}
-
-func (c *MainController) ToIpfsReceive() {
-	c.TplName = "ipfs-receive.html"
-}
-
-func (c *MainController) ToIpfsUpload() {
-	c.TplName = "ipfs-upload.html"
 }

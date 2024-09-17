@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search by Address</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            margin: 0;
+            padding-top: 40px;
+            position: relative;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* 新增的样式用于展示结果 */
+        .results {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .card p {
+            margin: 5px 0;
+            color: #555;
+        }
+        /* 添加返回首页按钮样式 */
+        .back-home {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .back-home:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 返回首页按钮 -->
+<a href="/" class="back-home">返回首页</a>
+
+<div class="container">
+    <h1>输入地址以查看记录</h1>
+    <form id="search-form">
+        <input type="text" id="address" name="address" placeholder="请输入地址" required>
+        <button type="submit">查看记录</button>
+    </form>
+</div>
+
+<!-- 结果展示区域 -->
+<div class="results" id="results">
+    <!-- 动态展示数据 -->
+</div>
+
+<script>
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();  // 阻止默认的表单提交行为
+
+        // 获取输入的地址
+        const address = document.getElementById('address').value;
+
+        // 发送 AJAX 请求到后端
+        fetch(`/show-data?address=${address}`, {
+            method: 'GET',
+        })
+            .then(response => response.json()) // 将响应转换为 JSON 格式
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ''; // 清空之前的内容
+
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
+                    <h3>Record ID: ${item.Id}</h3>
+                    <p><strong>Cryptograph:</strong> ${item.Cryptograph}</p>
+                    <p><strong>Digest Hash:</strong> ${item.DigestHash}</p>
+                    <p><strong>Signature:</strong> ${item.Signature}</p>
+                `;
+                        resultsDiv.appendChild(card);
+                    });
+                } else {
+                    resultsDiv.innerHTML = '<p>无匹配记录</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = '<p>查询失败，请稍后重试。</p>';
+            });
+    });
+</script>
+
+</body>
+</html>

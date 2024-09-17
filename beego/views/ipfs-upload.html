@@ -1,38 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IPFS 上传和存储 CID</title>
-<!-- 引入 IPFS HTTP 客户端 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPFS 上传和存储 CID</title>
+    <!-- 引入 IPFS HTTP 客户端 -->
     <script src="https://unpkg.com/ipfs-http-client@60.0.1/dist/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
     <script src="../static/js/ipfs-upload.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 14px;
+            color: #333;
+            word-wrap: break-word;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>上传 .txt 文件并存储 CID</h1>
+<div class="container">
+    <h1>上传 .txt 文件并存储 CID</h1>
 
-<!-- 文件上传区域 -->
-<label for="fileInput">选择一个 .txt 文件：</label>
-<input type="file" id="fileInput" accept=".txt">
-<br><br>
+    <!-- 文件上传区域 -->
+    <label for="fileInput">选择一个 .txt 文件：</label>
+    <input type="file" id="fileInput" accept=".txt">
 
-<!-- 区块链地址输入 -->
-<label for="userAddress">请输入您的地址：</label>
-<input type="text" id="userAddress" placeholder="0xYourAddress">
-<br><br>
+    <!-- 区块链地址输入 -->
+    <label for="userAddress">请输入您的地址：</label>
+    <input type="text" id="userAddress" placeholder="0xYourAddress">
 
-<!-- 上传和存储按钮 -->
-<button onclick="main()">上传到 IPFS 并存储 CID</button>
-<br><br>
+    <!-- 上传和存储按钮 -->
+    <button onclick="main()">上传到 IPFS 并存储 CID</button>
 
-<!-- 显示 CID -->
-<label for="cidOutput">文件的 CID：</label>
-<p id="cidOutput"></p>
+    <!-- 显示 CID -->
+    <label for="cidOutput">文件的 CID：</label>
+    <p id="cidOutput">CID 将显示在这里...</p>
 
-<!-- 显示哈希摘要 -->
-<label for="digestOutput">文件的哈希摘要：</label>
-<p id="digestOutput"></p>
-
+    <!-- 显示哈希摘要 -->
+    <label for="digestOutput">文件的哈希摘要：</label>
+    <p id="digestOutput">哈希摘要将显示在这里...</p>
+</div>
 </body>
 </html>

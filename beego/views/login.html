@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .toggle-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .toggle-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>登录</h2>
+    <form action="/login" method="post" id="login-form" >
+        <!-- 显示错误信息 -->
+        {{if .Message}}
+        <div class="error-message">{{.Message}}</div>
+        {{end}}
+        <div class="form-group">
+            <label >Address</label>
+            <input id="login-email" name="address" required>
+        </div>
+        <div class="form-group">
+            <label>密码</label>
+            <input type="password" id="login-password" name="password" required>
+        </div>
+        <button type="submit" class="btn" id="login-button">登录</button>
+        <p></p>
+    </form>
+    <!--    <form action="/home" method="post"><button type="submit" class="btn" id="login-button">登录</button></form>-->
+    <form action="/register" method="get"><p>还没有账户?</p> <button action="/" type="submit" class="btn" >注册</button></form>
+</div>
+
+<!--<script>-->
+<!--    //login-->
+<!--    const loginForm = document.getElementById("login-form");-->
+<!--    loginForm.addEventListener("submit", function(event) {-->
+<!--    const userData = {-->
+<!--    Username: document.getElementById('login-email').value,-->
+<!--    Password: document.getElementById('login-password').value-->
+<!--    };-->
+
+<!--    fetch('/login', {-->
+<!--        method: 'POST',-->
+<!--        headers: {-->
+<!--            'Content-Type': 'application/json'-->
+<!--        },-->
+<!--        body: JSON.stringify(userData)-->
+<!--    })-->
+<!--    .then(response => {-->
+<!--    if (response.ok) {-->
+<!--        sessionStorage.setItem('userData', JSON.stringify(userData));-->
+<!--        window.location.href = "/homePage";-->
+<!--    } else {-->
+<!--        alert("Invalid username or password");-->
+<!--        window.location.href = "/";-->
+<!--    }-->
+<!--    })-->
+<!--    .catch(error => console.error('Error:', error));})-->
+<!--</script>-->
+
+</body>
+</html>
