@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<<<<<<< HEAD
 <html lang="zh">
 <head>
     <meta charset="utf-8">
@@ -86,11 +87,89 @@
             flex-wrap: wrap;
             gap: 2em;
         }
+=======
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between; /* 使内容两边对齐 */
+            align-items: center;
+        }
+
+        .user-info {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        .dropdown-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-content a {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-info:hover .dropdown {
+            display: block;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
         /* 新增的登录注册按钮样式 */
         .auth-buttons {
             display: flex;
             gap: 10px;
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
         .auth-button {
             background-color: #007bff;
             color: white;
@@ -106,6 +185,7 @@
         .auth-button:hover {
             background-color: #0056b3;
         }
+<<<<<<< HEAD
         .text-content {
             flex: 2; /* 2份 */
             padding: 2em;
@@ -261,10 +341,28 @@
         <a href="/receive">签名</a>
         <a href="/show">展示</a>
     </div>
+=======
+    </style>
+</head>
+<body>
+<header class="navbar">
+    <div class="user-info" id="user-info">
+        <!--        <img src="static/image/Monel.jpeg" alt="User Avatar" class="avatar">-->
+        <span id="username"></span>
+        <div class="dropdown">
+            <div class="dropdown-content">
+                <a href="#">User Settings</a>
+                <a href="#">Profile Details</a>
+            </div>
+        </div>
+    </div>
+    <!-- 新增的登录/注册按钮 -->
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
     <div class="auth-buttons">
         <a href="/login" class="auth-button">登录</a>
         <a href="/register" class="auth-button">注册</a>
     </div>
+<<<<<<< HEAD
     <!--    <img src="/static/image/s.jpg" style="max-width: 100%; height: auto; position: absolute; top: 0; right: 1%; border-radius: 50%;" alt="Responsive Image">-->
 
 </div>
@@ -382,5 +480,39 @@
     </ul>
 
 </section>
+=======
+</header>
+
+<main>
+    <h1>Welcome to the Home Page</h1>
+    <p>This is the main content area.</p>
+</main>
+
+<script>
+    // script.js
+    window.onload = function() {
+        const userData = JSON.parse(sessionStorage.getItem('userData'));
+        if (userData) {
+            console.log('User Data:', userData);
+            document.getElementById('username').innerText = `Welcome, ${userData.Username}!`;
+        }
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+        const userInfo = document.getElementById('user-info');
+        const dropdown = document.querySelector('.dropdown');
+
+        userInfo.addEventListener('click', function() {
+            dropdown.classList.toggle('show');
+        });
+
+        // 点击页面其他地方时关闭下拉菜单
+        window.addEventListener('click', function(event) {
+            if (!userInfo.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    });
+</script>
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 </body>
 </html>

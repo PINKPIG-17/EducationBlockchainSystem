@@ -1,6 +1,10 @@
 {
   "dependencies": {
     "cors": "^2.8.5",
+<<<<<<< HEAD
+=======
+    "elliptic": "^6.5.4",
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
     "ethers": "^6.13.2",
     "express": "^4.20.0",
     "ipfs-http-client": "^60.0.1",

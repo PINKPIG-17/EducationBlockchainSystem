@@ -251,12 +251,22 @@ async function getFilesFromContract() {
 }
 
 async function sigFile(cid) {
+<<<<<<< HEAD
     console.log("access sigFile")
     try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         // 获取当前用户的地址
         const userAddress = await signer.getAddress();
+=======
+    try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+
+        // 获取当前用户的地址
+        const userAddress = await signer.getAddress();
+
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
         // 调用合约，获取用户文件列表
         const contract = new ethers.Contract(storeContractAddress, storeContractAbi, signer);
         const [cids, senders, timestamps, digests] = await contract.getFiles(userAddress);  // 获取多个数组
@@ -278,7 +288,10 @@ async function sigFile(cid) {
         const signature = await signer.signMessage(ethers.toUtf8Bytes(digest));
 
         //将数据发给后端
+<<<<<<< HEAD
         console.log("ready to sendToSQL")
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
         await sendToSQL(cid, senderAddress, signature, digest);
 
         // 使用 receiveContract 调用 storeUserInfo 函数，将签名、哈希等信息存储到合约
@@ -436,12 +449,15 @@ async function getFileFromIPFS(cid) {
     }
 }
 
+<<<<<<< HEAD
 //公钥加密
 async function encryptWithSenderPublicKey(senderAddress, message) {
     // 假设你有一个加密函数，这里使用 senderAddress 作为公钥
     // 返回加密后的密文
     return `Encrypted(${message}) with ${senderAddress}`;
 }
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 
 async function storeUserInfo(senderAddress, cid, signature) {
     try {
@@ -461,7 +477,11 @@ async function storeUserInfo(senderAddress, cid, signature) {
 }
 
 //拒绝签名
+<<<<<<< HEAD
 async function rejectSignature(cid, userAddress) {
+=======
+function rejectSignature(cid, userAddress) {
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
     const confirmDelete = confirm('您拒绝签名，是否确认删除该文件？')
     if (confirmDelete) {
         deleteCid(cid, userAddress)
@@ -485,7 +505,10 @@ async function deleteCid(cid, userAddress) {
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 window.onload = function() {
     // 绑定“加载用户文件”按钮的点击事件
     document.getElementById('loadUserFilesButton').addEventListener('click', async () => {
@@ -537,14 +560,18 @@ window.onload = function() {
 
     // 绑定“签名文件”按钮的点击事件
     document.getElementById('signButton').addEventListener('click', async () => {
+<<<<<<< HEAD
         console.log('Sign button clicked'); // 检查是否成功点击了按钮
         alert('Sign button clicked');
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
         const cid = document.getElementById('signButton').dataset.cid;
         const senderAddress = document.getElementById('signButton').dataset.sender;
         await sigFile(cid, senderAddress);
     });
 
     // 绑定“拒绝签名”按钮的点击事件
+<<<<<<< HEAD
     document.getElementById('rejectButton').addEventListener('click', async () => {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
@@ -552,6 +579,12 @@ window.onload = function() {
 
         const cid = document.getElementById('rejectButton').dataset.cid;
         await rejectSignature(cid, userAddress);
+=======
+    document.getElementById('rejectButton').addEventListener('click', () => {
+        const cid = document.getElementById('rejectButton').dataset.cid;
+        const userAddress = document.getElementById('userAddress').value;
+        rejectSignature(cid, userAddress);
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
     });
 };
 
@@ -574,8 +607,11 @@ async function getText(cid) {
 
 // 将原文加密并存入后端的函数
 async function sendToSQL(cid, senderAddress, signature, digest) {
+<<<<<<< HEAD
 
     console.log("access sendToSQL")
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
     try {
         // 调用 getText 获取原文
         const originalText = await getText(cid);
@@ -584,7 +620,11 @@ async function sendToSQL(cid, senderAddress, signature, digest) {
         const encryptedText = await encryptWithSenderPublicKey(senderAddress, originalText);
 
         // 发送加密后的原文、发送者地址、签名和摘要到后端
+<<<<<<< HEAD
         await fetch('/receive', {
+=======
+        await fetch('/store-encrypted-text', {
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -603,4 +643,70 @@ async function sendToSQL(cid, senderAddress, signature, digest) {
         console.error('存储加密后的原文失败:', error);
         throw new Error('存储加密后的原文失败');
     }
+<<<<<<< HEAD
+=======
+}
+
+//公钥加密
+const EC = elliptic.ec;
+const ec = new EC('secp256k1');
+
+async function encryptWithSenderPublicKey(senderAddress, message) {
+    try {
+        // 调用 getPublicKeyFromSenderAddress 获取公钥
+        const publicKeyHex = await getPublicKeyFromSenderAddress(senderAddress);
+
+        // 将公钥转换为 elliptic 公钥对象
+        const publicKey = ec.keyFromPublic(publicKeyHex.slice(2), 'hex').getPublic();
+
+        // 使用公钥生成共享密钥
+        const sharedKey = ec.genKeyPair().derive(publicKey);
+
+        // 将消息编码为十六进制
+        const encodedMessage = Buffer.from(message).toString('hex');
+
+        // 使用共享密钥进行简单的 XOR 加密
+        const encryptedMessage = (BigInt('0x' + encodedMessage) ^ BigInt(sharedKey.toString(16))).toString(16);
+
+        // 返回加密后的消息
+        return encryptedMessage;
+    } catch (error) {
+        console.error('加密失败:', error);
+        throw new Error(`加密失败: ${error.message}`);
+    }
+}
+
+
+async function getPublicKeyFromSenderAddress(senderAddress) {
+    try {
+        // 创建 BrowserProvider
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        
+        // 请求用户授权并连接 MetaMask
+        await provider.send("eth_requestAccounts", []);
+        
+        // 获取签名者（MetaMask 当前账户）
+        const signer = await provider.getSigner();
+        const userAddress = await signer.getAddress();
+
+        if (userAddress.toLowerCase() !== senderAddress.toLowerCase()) {
+            throw new Error("当前用户地址与提供的 senderAddress 不匹配");
+        }
+
+        // 定义签名消息（可以是任意消息，用来从签名中提取公钥）
+        const message = "Get public key from MetaMask";
+
+        // 请求用户签名消息
+        const signature = await signer.signMessage(message);
+
+        // 从签名中恢复公钥
+        const publicKeyHex = ethers.utils.recoverPublicKey(ethers.hashMessage(message), signature);
+
+        console.log("恢复的公钥:", publicKeyHex);
+        return publicKeyHex;  // 返回公钥
+    } catch (error) {
+        console.error('获取公钥失败:', error);
+        throw new Error(`获取公钥失败: ${error.message}`);
+    }
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 }

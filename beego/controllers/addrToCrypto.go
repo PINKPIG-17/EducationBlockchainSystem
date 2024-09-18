@@ -42,6 +42,7 @@ func (c *AddrToCryptoController) PostUpload() {
 
 }
 
+<<<<<<< HEAD
 // 定义接收的数据结构
 type SignatureData struct {
 	CID           string `json:"cid"`
@@ -54,6 +55,10 @@ type SignatureData struct {
 // receive->post
 func (c *AddrToCryptoController) PostReceive() {
 
+=======
+// receive->post
+func (c *AddrToCryptoController) PostReceive() {
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 	var requestData struct {
 		CID           string `json:"cid"`
 		EncryptedText string `json:"encryptedText"`
@@ -62,18 +67,24 @@ func (c *AddrToCryptoController) PostReceive() {
 		Digest        string `json:"digest"`
 	}
 
+<<<<<<< HEAD
 	fmt.Println("yanz")
 	fmt.Println(string(c.Ctx.Input.RequestBody))
 	fmt.Println("jieshu")
 	// 解析 JSON 数据
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &requestData)
 
+=======
+	// 解析 JSON 数据
+	err := json.Unmarshal(c.Ctx.Input.RequestBody, &requestData)
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 	if err != nil {
 		c.Ctx.Output.SetStatus(http.StatusBadRequest)
 		c.Ctx.Output.Body([]byte("Invalid JSON data"))
 		return
 	}
 
+<<<<<<< HEAD
 	db, _ := orm.GetDB("default")
 	if db == nil {
 		fmt.Println("No database alias 'default' found.")
@@ -89,21 +100,38 @@ func (c *AddrToCryptoController) PostReceive() {
 
 	// 创建 FileInfo 实例并存储数据
 	addrToCrypto := models.AddrToCrypto{
+=======
+	// 创建 ORM 对象
+	o := orm.NewOrm()
+
+	// 创建 FileInfo 实例并存储数据
+	addrToCryto := models.AddrToCrypto{
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 		Address:     requestData.SenderAddress,
 		Cryptograph: requestData.EncryptedText,
 		DigestHash:  requestData.Digest,
 		Signature:   requestData.Signature,
 	}
+<<<<<<< HEAD
 	fmt.Println("1.")
 	// 将数据插入到数据库
 	_, err = o.Insert(&addrToCrypto)
 	if err != nil {
 		fmt.Println(err)
+=======
+
+	// 将数据插入到数据库
+	_, err = o.Insert(&addrToCryto)
+	if err != nil {
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 		c.Ctx.Output.SetStatus(http.StatusInternalServerError)
 		c.Ctx.Output.Body([]byte("Failed to store data"))
 		return
 	}
+<<<<<<< HEAD
 	fmt.Println("2")
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 
 	// 成功响应
 	c.Ctx.Output.SetStatus(http.StatusOK)

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑个人资料</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            position: relative; /* Added to position the back button correctly */
+        }
+
+        .edit-profile-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        .edit-profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .edit-profile-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .edit-profile-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input[type="file"] {
+            padding: 3px;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .profile-preview img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<a href="/home" class="back-button">返回主页</a>
+
+<div class="edit-profile-container">
+    <header class="edit-profile-header">
+        <h1>编辑个人资料</h1>
+    </header>
+
+    <form class="edit-profile-form" id="editProfileForm">
+        <div class="form-group">
+            <label for="avatar">头像上传:</label>
+            <input type="file" id="avatar" accept="image/*" onchange="previewImage(event)">
+            <div class="profile-preview">
+                <img id="avatarPreview" src="path/to/avatar.jpg" alt="头像预览">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="username">用户名:</label>
+            <input type="text" id="username" value="张三">
+        </div>
+
+        <div class="form-group">
+            <label for="email">电子邮件:</label>
+            <input type="email" id="email" value="example@example.com">
+        </div>
+
+        <div class="form-group">
+            <label for="phone">电话:</label>
+            <input type="tel" id="phone" value="+123 456 7890">
+        </div>
+
+        <div class="button-container">
+            <button type="button" onclick="submitProfile()">保存更改</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const output = document.getElementById('avatarPreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function submitProfile() {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        // 后端处理
+        console.log("用户名:", username);
+        console.log("电子邮件:", email);
+        console.log("电话:", phone);
+
+        alert('个人资料已更新！');
+    }
+</script>
+</body>
+</html>

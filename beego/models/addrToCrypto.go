@@ -1,6 +1,12 @@
 package models
 
+<<<<<<< HEAD
 import "github.com/beego/beego/orm"
+=======
+import (
+	"github.com/beego/beego/v2/client/orm"
+)
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 
 // 定义数据模型
 type AddrToCrypto struct {

@@ -22,7 +22,11 @@ func init() {
 	beego.Router("/logout", &controllers.UserController{}, "get:Logout")
 	beego.Router("/upload", &controllers.AddrToCryptoController{}, "get:GetUpload;post:PostUpload")
 	beego.Router("/receive", &controllers.AddrToCryptoController{}, "get:GetReceive;post:PostReceive")
+<<<<<<< HEAD
 	beego.Router("/show", &controllers.ShowInfoController{}, "get:Get;post:ShowDataByAddress")
 	beego.Router("/userInfo", &controllers.UserController{}, "get:GetUserInfo")
 	beego.Router("/editInfo", &controllers.UserController{}, "get:EditUserInfo")
+=======
+	beego.Router("/show", &controllers.ShowInfoController{}, "get:ShowDataByAddress")
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 }

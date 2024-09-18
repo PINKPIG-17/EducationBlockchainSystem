@@ -33,10 +33,13 @@ func init() {
 	}
 }
 
+<<<<<<< HEAD
 func (c *UserController) EditUserInfo() {
 	c.TplName = "editInfo.html"
 }
 
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 func (c *UserController) Get() {
 	//err := orm.RegisterDataBase("default", "mysql", "root:123456@tcp(127.0.0.1:3306)/eduSys_Database?charset=utf8")
 	//if err != nil {
@@ -265,6 +268,7 @@ func (c *UserController) Logout() {
 	// 重定向到登录页面
 	c.Redirect("/login", 302)
 }
+<<<<<<< HEAD
 
 // userInfoGet
 func (c *UserController) GetUserInfo() {
@@ -289,3 +293,5 @@ func (c *UserController) GetUserInfo() {
 
 	c.TplName = "userInfo.html"
 }
+=======
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
