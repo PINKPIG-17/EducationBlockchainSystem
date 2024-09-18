@@ -33,6 +33,10 @@ func init() {
 	}
 }
 
+func (c *UserController) EditUserInfo() {
+	c.TplName = "editInfo.html"
+}
+
 func (c *UserController) Get() {
 	//err := orm.RegisterDataBase("default", "mysql", "root:123456@tcp(127.0.0.1:3306)/eduSys_Database?charset=utf8")
 	//if err != nil {
@@ -260,4 +264,28 @@ func (c *UserController) Logout() {
 
 	// 重定向到登录页面
 	c.Redirect("/login", 302)
+}
+
+// userInfoGet
+func (c *UserController) GetUserInfo() {
+	// 检查用户是否已登录
+	address := c.GetSession("address")
+	if address == nil {
+		fmt.Println("用户未登录")
+		c.Redirect("/login", 302)
+		return
+	}
+
+	// 从数据库获取用户信息
+	o := orm.NewOrm()
+	user := models.User{Address: address.(string)}
+	err := o.Read(&user, "Address")
+	if err != nil {
+		c.Data["Error"] = "用户不存在"
+	}
+
+	// 将用户信息传递给模板
+	c.Data["User"] = user
+
+	c.TplName = "userInfo.html"
 }

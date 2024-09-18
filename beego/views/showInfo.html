@@ -67,6 +67,8 @@
         .card p {
             margin: 5px 0;
             color: #555;
+            word-break: break-all; /* 控制长字符串的换行 */
+            white-space: normal;   /* 确保换行正常发生 */
         }
         /* 添加返回首页按钮样式 */
         .back-home {
@@ -90,11 +92,11 @@
 <body>
 
 <!-- 返回首页按钮 -->
-<a href="/" class="back-home">返回首页</a>
+<a href="/home" class="back-home">返回首页</a>
 
 <div class="container">
     <h1>输入地址以查看记录</h1>
-    <form id="search-form">
+    <form action="/show" method="post" id="search-form">
         <input type="text" id="address" name="address" placeholder="请输入地址" required>
         <button type="submit">查看记录</button>
     </form>
@@ -113,8 +115,8 @@
         const address = document.getElementById('address').value;
 
         // 发送 AJAX 请求到后端
-        fetch(`/show-data?address=${address}`, {
-            method: 'GET',
+        fetch(`/show?address=${address}`, {
+            method: 'POST',
         })
             .then(response => response.json()) // 将响应转换为 JSON 格式
             .then(data => {

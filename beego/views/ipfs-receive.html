@@ -33,6 +33,22 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
+        .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+
         h1 {
             text-align: center;
             color: #333;
@@ -127,6 +143,7 @@
     </style>
 </head>
 <body>
+<a href="/home" class="home-button">返回首页</a>
 <div class="container">
     <h1>文件签名系统</h1>
 
@@ -142,7 +159,8 @@
     <div id="fileContent">文件内容将显示在这里...</div>
 
     <h2>文件操作</h2>
-    <form action="/receive" method="post"><button id="signButton">签名文件</button></form>
+    <button id="signButton">签名文件</button>
+<!--    <form action="/receive" method="post"><button id="signButton">签名文件</button></form>-->
     <button id="rejectButton">拒绝签名</button>
 </div>
 </body>

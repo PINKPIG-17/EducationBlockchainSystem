@@ -1,7 +1,9 @@
 package main
 
 import (
+	"beego/models"
 	_ "beego/routers"
+	"encoding/gob"
 	"fmt"
 	"github.com/beego/beego/v2/client/orm"
 	beego "github.com/beego/beego/v2/server/web"
@@ -18,6 +20,7 @@ func init() {
 	if err != nil {
 		fmt.Println(err)
 	}
+	gob.Register(models.AddrToCrypto{})
 }
 
 func main() {
@@ -28,5 +31,7 @@ func main() {
 	} else {
 		fmt.Println("Database alias 'default' is registered successfully.")
 	}
+	orm.RegisterModel(new(models.AddrToCrypto))
+	beego.BConfig.CopyRequestBody = true
 	beego.Run()
 }

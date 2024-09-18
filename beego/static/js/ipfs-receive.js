@@ -251,13 +251,12 @@ async function getFilesFromContract() {
 }
 
 async function sigFile(cid) {
+    console.log("access sigFile")
     try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
-
         // 获取当前用户的地址
         const userAddress = await signer.getAddress();
-
         // 调用合约，获取用户文件列表
         const contract = new ethers.Contract(storeContractAddress, storeContractAbi, signer);
         const [cids, senders, timestamps, digests] = await contract.getFiles(userAddress);  // 获取多个数组
@@ -279,6 +278,7 @@ async function sigFile(cid) {
         const signature = await signer.signMessage(ethers.toUtf8Bytes(digest));
 
         //将数据发给后端
+        console.log("ready to sendToSQL")
         await sendToSQL(cid, senderAddress, signature, digest);
 
         // 使用 receiveContract 调用 storeUserInfo 函数，将签名、哈希等信息存储到合约
@@ -461,7 +461,7 @@ async function storeUserInfo(senderAddress, cid, signature) {
 }
 
 //拒绝签名
-function rejectSignature(cid, userAddress) {
+async function rejectSignature(cid, userAddress) {
     const confirmDelete = confirm('您拒绝签名，是否确认删除该文件？')
     if (confirmDelete) {
         deleteCid(cid, userAddress)
@@ -537,16 +537,21 @@ window.onload = function() {
 
     // 绑定“签名文件”按钮的点击事件
     document.getElementById('signButton').addEventListener('click', async () => {
+        console.log('Sign button clicked'); // 检查是否成功点击了按钮
+        alert('Sign button clicked');
         const cid = document.getElementById('signButton').dataset.cid;
         const senderAddress = document.getElementById('signButton').dataset.sender;
         await sigFile(cid, senderAddress);
     });
 
     // 绑定“拒绝签名”按钮的点击事件
-    document.getElementById('rejectButton').addEventListener('click', () => {
+    document.getElementById('rejectButton').addEventListener('click', async () => {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const userAddress = await signer.getAddress();
+
         const cid = document.getElementById('rejectButton').dataset.cid;
-        const userAddress = document.getElementById('userAddress').value;
-        rejectSignature(cid, userAddress);
+        await rejectSignature(cid, userAddress);
     });
 };
 
@@ -569,6 +574,8 @@ async function getText(cid) {
 
 // 将原文加密并存入后端的函数
 async function sendToSQL(cid, senderAddress, signature, digest) {
+
+    console.log("access sendToSQL")
     try {
         // 调用 getText 获取原文
         const originalText = await getText(cid);
@@ -577,7 +584,7 @@ async function sendToSQL(cid, senderAddress, signature, digest) {
         const encryptedText = await encryptWithSenderPublicKey(senderAddress, originalText);
 
         // 发送加密后的原文、发送者地址、签名和摘要到后端
-        await fetch('/store-encrypted-text', {
+        await fetch('/receive', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
