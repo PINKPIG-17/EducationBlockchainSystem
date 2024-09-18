@@ -69,6 +69,8 @@
         .card p {
             margin: 5px 0;
             color: #555;
+            word-break: break-all; /* 控制长字符串的换行 */
+            white-space: normal;   /* 确保换行正常发生 */
         }
         /* 添加返回首页按钮样式 */
         .back-home {
@@ -109,118 +111,156 @@
 </div>
 
 <script>
- document.getElementById('search-form').addEventListener('submit', function(e) {
-    e.preventDefault();  // 阻止默认的表单提交行为
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();  // 阻止默认的表单提交行为
 
-    // 获取输入的地址和私钥
-    const address = document.getElementById('address').value;
-    const privateKey = document.getElementById('privateKey').value;
+        // 获取输入的地址
+        const address = document.getElementById('address').value;
 
-    // 检查私钥的合法性
-    if (!/^[0-9a-fA-F]{64}$/.test(privateKey)) {
-        alert('无效的私钥');
-        return;
-    }
-
-    // 获取公钥后再进行解密操作
-    getPublicKeyFromSenderAddress(address).then(publicKeyHex => {
         // 发送 AJAX 请求到后端
-        fetch(`/show-data?address=${address}`, {
-            method: 'GET',
+        fetch(`/show?address=${address}`, {
+            method: 'POST',
         })
-        .then(response => response.json()) // 将响应转换为 JSON 格式
-        .then(data => {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; // 清空之前的内容
+            .then(response => response.json()) // 将响应转换为 JSON 格式
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ''; // 清空之前的内容
 
-            if (data.length > 0) {
-                data.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = 'card';
-                    
-                    // 调用解密函数
-                    const decryptedMessage = decryptWithPrivateKey(privateKey, item.Cryptograph, publicKeyHex);
-
-                    card.innerHTML = `
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.innerHTML = `
                     <h3>Record ID: ${item.Id}</h3>
-                    <p><strong>加密内容:</strong> ${item.Cryptograph}</p>
-                    <p><strong>解密后内容:</strong> ${decryptedMessage}</p>
-                    `;
-                    resultsDiv.appendChild(card);
-                });
-            } else {
-                resultsDiv.innerHTML = '<p>无匹配记录</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('results').innerHTML = '<p>查询失败，请稍后重试。</p>';
-        });
-    }).catch(error => {
-        console.error('获取公钥失败:', error);
-        alert('无法获取公钥，请重试');
+                    <p><strong>Cryptograph:</strong> ${item.Cryptograph}</p>
+                    <p><strong>Digest Hash:</strong> ${item.DigestHash}</p>
+                    <p><strong>Signature:</strong> ${item.Signature}</p>
+                `;
+                        resultsDiv.appendChild(card);
+                    });
+                } else {
+                    resultsDiv.innerHTML = '<p>无匹配记录</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = '<p>查询失败，请稍后重试。</p>';
+            });
     });
-});
+</script>
 
-const EC = elliptic.ec;
-const ec = new EC('secp256k1');
+    document.getElementById('search-form').addEventListener('submit', function(e) {
+        e.preventDefault();  // 阻止默认的表单提交行为
 
-// 解密函数
-function decryptWithPrivateKey(privateKeyHex, encryptedMessage, publicKeyHex) {
-    try {
-        // 将私钥转换为 elliptic 的私钥对象
-        const privateKey = ec.keyFromPrivate(privateKeyHex, 'hex');
+        // 获取输入的地址和私钥
+        const address = document.getElementById('address').value;
+        const privateKey = document.getElementById('privateKey').value;
 
-        // 将传入的公钥转换为 elliptic 公钥对象
-        const publicKey = ec.keyFromPublic(publicKeyHex.slice(2), 'hex').getPublic();
-
-        // 生成共享密钥
-        const sharedKey = privateKey.derive(publicKey); // 使用私钥和公钥生成共享密钥
-
-        // 解密加密的消息 (假设 XOR 加密)
-        const decryptedMessageHex = (BigInt('0x' + encryptedMessage) ^ BigInt(sharedKey.toString(16))).toString(16);
-
-        // 将解密后的十六进制字符串转换回原始消息
-        return Buffer.from(decryptedMessageHex, 'hex').toString();
-    } catch (error) {
-        console.error("解密失败：", error);
-        return "解密失败";
-    }
-}
-
-// 从 MetaMask 获取公钥的函数
-async function getPublicKeyFromSenderAddress(senderAddress) {
-    try {
-        // 创建 BrowserProvider
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        
-        // 请求用户授权并连接 MetaMask
-        await provider.send("eth_requestAccounts", []);
-        
-        // 获取签名者（MetaMask 当前账户）
-        const signer = await provider.getSigner();
-        const userAddress = await signer.getAddress();
-
-        if (userAddress.toLowerCase() !== senderAddress.toLowerCase()) {
-            throw new Error("当前用户地址与提供的 senderAddress 不匹配");
+        // 检查私钥的合法性
+        if (!/^[0-9a-fA-F]{64}$/.test(privateKey)) {
+            alert('无效的私钥');
+            return;
         }
 
-        // 定义签名消息（可以是任意消息，用来从签名中提取公钥）
-        const message = "Get public key from MetaMask";
+        // 获取公钥后再进行解密操作
+        getPublicKeyFromSenderAddress(address).then(publicKeyHex => {
+            // 发送 AJAX 请求到后端
+            fetch(`/show-data?address=${address}`, {
+                method: 'GET',
+            })
+            .then(response => response.json()) // 将响应转换为 JSON 格式
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ''; // 清空之前的内容
 
-        // 请求用户签名消息
-        const signature = await signer.signMessage(message);
+                if (data.length > 0) {
+                    data.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        
+                        // 调用解密函数
+                        const decryptedMessage = decryptWithPrivateKey(privateKey, item.Cryptograph, publicKeyHex);
 
-        // 从签名中恢复公钥
-        const publicKeyHex = ethers.utils.recoverPublicKey(ethers.hashMessage(message), signature);
+                        card.innerHTML = `
+                        <h3>Record ID: ${item.Id}</h3>
+                        <p><strong>加密内容:</strong> ${item.Cryptograph}</p>
+                        <p><strong>解密后内容:</strong> ${decryptedMessage}</p>
+                        `;
+                        resultsDiv.appendChild(card);
+                    });
+                } else {
+                    resultsDiv.innerHTML = '<p>无匹配记录</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('results').innerHTML = '<p>查询失败，请稍后重试。</p>';
+            });
+        }).catch(error => {
+            console.error('获取公钥失败:', error);
+            alert('无法获取公钥，请重试');
+        });
+    });
 
-        console.log("恢复的公钥:", publicKeyHex);
-        return publicKeyHex;  // 返回公钥
-    } catch (error) {
-        console.error('获取公钥失败:', error);
-        throw new Error(`获取公钥失败: ${error.message}`);
+    const EC = elliptic.ec;
+    const ec = new EC('secp256k1');
+
+    // 解密函数
+    function decryptWithPrivateKey(privateKeyHex, encryptedMessage, publicKeyHex) {
+        try {
+            // 将私钥转换为 elliptic 的私钥对象
+            const privateKey = ec.keyFromPrivate(privateKeyHex, 'hex');
+
+            // 将传入的公钥转换为 elliptic 公钥对象
+            const publicKey = ec.keyFromPublic(publicKeyHex.slice(2), 'hex').getPublic();
+
+            // 生成共享密钥
+            const sharedKey = privateKey.derive(publicKey); // 使用私钥和公钥生成共享密钥
+
+            // 解密加密的消息 (假设 XOR 加密)
+            const decryptedMessageHex = (BigInt('0x' + encryptedMessage) ^ BigInt(sharedKey.toString(16))).toString(16);
+
+            // 将解密后的十六进制字符串转换回原始消息
+            return Buffer.from(decryptedMessageHex, 'hex').toString();
+        } catch (error) {
+            console.error("解密失败：", error);
+            return "解密失败";
+        }
     }
-}
+
+    // 从 MetaMask 获取公钥的函数
+    async function getPublicKeyFromSenderAddress(senderAddress) {
+        try {
+            // 创建 BrowserProvider
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            
+            // 请求用户授权并连接 MetaMask
+            await provider.send("eth_requestAccounts", []);
+            
+            // 获取签名者（MetaMask 当前账户）
+            const signer = await provider.getSigner();
+            const userAddress = await signer.getAddress();
+
+            if (userAddress.toLowerCase() !== senderAddress.toLowerCase()) {
+                throw new Error("当前用户地址与提供的 senderAddress 不匹配");
+            }
+
+            // 定义签名消息（可以是任意消息，用来从签名中提取公钥）
+            const message = "Get public key from MetaMask";
+
+            // 请求用户签名消息
+            const signature = await signer.signMessage(message);
+
+            // 从签名中恢复公钥
+            const publicKeyHex = ethers.utils.recoverPublicKey(ethers.hashMessage(message), signature);
+
+            console.log("恢复的公钥:", publicKeyHex);
+            return publicKeyHex;  // 返回公钥
+        } catch (error) {
+            console.error('获取公钥失败:', error);
+            throw new Error(`获取公钥失败: ${error.message}`);
+        }
+    }
 </script>
 </body>
 </html>

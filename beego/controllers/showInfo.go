@@ -10,9 +10,16 @@ type ShowInfoController struct {
 	beego.Controller
 }
 
+// post
 func (c *ShowInfoController) ShowDataByAddress() {
+	// 检查用户是否已登录
+	address := c.GetSession("address")
+	if address == nil {
+		c.Redirect("/login", 302)
+		return
+	}
 	// 获取用户输入的地址
-	address := c.GetString("address")
+	address = c.GetString("address")
 	if address == "" {
 		c.Data["json"] = []string{}
 		c.ServeJSON()
@@ -32,4 +39,16 @@ func (c *ShowInfoController) ShowDataByAddress() {
 	// 将查询结果以 JSON 格式返回
 	c.Data["json"] = results
 	c.ServeJSON()
+}
+
+// get
+func (c *ShowInfoController) Get() {
+	// 检查用户是否已登录
+	address := c.GetSession("address")
+	if address == nil {
+		c.Redirect("/login", 302)
+		return
+	}
+
+	c.TplName = "showInfo.html"
 }

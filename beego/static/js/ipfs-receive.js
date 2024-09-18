@@ -564,6 +564,8 @@ async function getText(cid) {
 
 // 将原文加密并存入后端的函数
 async function sendToSQL(cid, senderAddress, signature, digest) {
+
+    console.log("access sendToSQL")
     try {
         // 调用 getText 获取原文
         const originalText = await getText(cid);
@@ -578,11 +580,11 @@ async function sendToSQL(cid, senderAddress, signature, digest) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                // cid,
-                // encryptedText,
+                cid,
+                encryptedText,
                 senderAddress,
-                // signature,
-                // digest,
+                signature,
+                digest,
             }),
         });
 

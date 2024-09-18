@@ -44,12 +44,13 @@ func (c *AddrToCryptoController) PostUpload() {
 
 // receive->post
 func (c *AddrToCryptoController) PostReceive() {
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
 	var requestData struct {
-		//CID           string `json:"cid"`
-		//EncryptedText string `json:"encryptedText"`
+		CID           string `json:"cid"`
+		EncryptedText string `json:"encryptedText"`
 		SenderAddress string `json:"senderAddress"`
-		//Signature     string `json:"signature"`
-		//Digest        string `json:"digest"`
+		Signature     string `json:"signature"`
+		Digest        string `json:"digest"`
 	}
 
 	// 解析 JSON 数据
@@ -66,10 +67,11 @@ func (c *AddrToCryptoController) PostReceive() {
 
 	// 创建 FileInfo 实例并存储数据
 	addrToCryto := models.AddrToCrypto{
-		Address: requestData.SenderAddress,
-		//Cryptograph: requestData.EncryptedText,
-		//DigestHash:  requestData.Digest,
-		//Signature:   requestData.Signature,
+>>>>>>> 6e4ad16c065d757a4da3e5f17a43172805e1cc06
+		Address:     requestData.SenderAddress,
+		Cryptograph: requestData.EncryptedText,
+		DigestHash:  requestData.Digest,
+		Signature:   requestData.Signature,
 	}
 
 	// 将数据插入到数据库

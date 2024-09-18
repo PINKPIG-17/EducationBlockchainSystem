@@ -1,82 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主页</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#3478F6">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="GetBlock.io">
+    <meta property="og:image" content="https://getblock.io/meta_main.png">
+    <title>初号机</title>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
         }
-
         .navbar {
-            background-color: #333;
-            color: white;
-            padding: 15px;
+            border-bottom: 0.1em solid #e0e0e0;
+            padding: 1em;
             display: flex;
-            justify-content: space-between; /* 使内容两边对齐 */
+            justify-content: space-between;
+            align-items: center;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .logo {
+            height: 2em;
+            width: auto;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5em;
             align-items: center;
         }
-
-        .user-info {
-            position: relative;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        .dropdown {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-        }
-
-        .dropdown-content {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .dropdown-content a {
-            padding: 10px 15px;
+        .nav-links a {
             text-decoration: none;
             color: #333;
+            transition: color 0.3s;
+            padding: 0.25em 0.5em;
+            border: 0.1em solid transparent;
+            border-radius: 0.25em;
         }
-
-        .dropdown-content a:hover {
-            background-color: #f0f0f0;
+        .nav-links a:hover {
+            color: #007bff;
+            border: 0.1em solid #007bff;
         }
-
-        .user-info:hover .dropdown {
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-button {
+            background-color: #f1f1f1;
+            border: none;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 0.5em;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 10em;
+            box-shadow: 0px 0.5em 1em rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 0.5em;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 0.75em 1em;
+            text-decoration: none;
             display: block;
         }
-
-        main {
-            padding: 20px;
+        .dropdown-content a:hover {
+            background-color: #ddd;
         }
-
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .header-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            background-color: #F7F7F8;
+            padding: 2em;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
         /* 新增的登录注册按钮样式 */
         .auth-buttons {
             display: flex;
             gap: 10px;
         }
-
         .auth-button {
             background-color: #007bff;
             color: white;
@@ -92,21 +106,161 @@
         .auth-button:hover {
             background-color: #0056b3;
         }
+        .text-content {
+            flex: 2; /* 2份 */
+            padding: 2em;
+            background-color: #F7F7F8;
+        }
+        .video-container {
+            flex: 3; /* 3份 */
+            padding: 0;
+            border-radius: 2em;
+            width: 100%;
+            max-width: 80%;
+            height: auto;
+            margin-left: auto;
+            position: relative;
+        }
+        .video {
+            width: 100%;
+            height: auto;
+            border-radius: 2em;
+        }
+        .header-title {
+            font-size: 3.5em;
+            line-height: 1.2;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+        }
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5em;
+                line-height: 1.2;
+            }
+        }
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.75em;
+                line-height: 1.2;
+            }
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            flex-wrap: wrap;
+            margin-top: 1.5em;
+        }
+        .custom-button {
+            padding: 1em 2em;
+            font-size: 1.125em;
+            border-radius: 0.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .custom-button a {
+            text-decoration: none; /* 去除下划线 */
+        }
+
+        .custom-button {
+            display: inline-flex; /* 确保按钮和内容在同一行 */
+            text-align: center; /* 确保按钮内文本居中 */
+        }
+
+        .custom-button img {
+            margin-left: 0.5em;
+        }
+        .custom-button:hover {
+            background-color: #0056b3;
+        }
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+            padding: 0;
+            list-style: none;
+        }
+        .flex-container li {
+            background: #f0f0f0;
+            border-radius: 0.75em;
+            padding: 1em;
+            text-align: center;
+            flex: 1 1 300px;
+        }
+
+        .custom-button a {
+            text-decoration: none; /* 去除下划线 */
+        }
+
+        /*新填样式*/
+        /*加入小图标的css*/
+        .flex-container,
+        .list-of-partners {
+            width: 100%; /* 确保每个 ul 占据整行 */
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap; /*确保子项在行内换行 */
+            justify-content: center; /* 居中显示 */
+            list-style: none; /* 去掉小点 */
+
+            gap: 3rem;
+        }
+        .container {
+            display: flex;
+            flex-direction: column; /* 垂直排列两个 ul */
+            align-items: center;
+        }
+        .list-of-partners {
+            display: flex;
+            flex-direction: row; /* 让子元素按行排列 */
+            flex-wrap: wrap; /* 如果元素太多，可以换行 */
+            justify-content: center; /*居中对齐 */
+            gap: 3rem; /* 调整图标之间的间距 */
+        }
+        .list-of-partners li {
+            transition: transform 0.3s, filter 0.3s;
+        }
+
+        .list-of-partners li:hover {
+            transform: scale(1.1); /* 使图标稍微放大 */
+        }
+
+        .list-of-partners a {
+            display: block;
+            transition: filter 0.3s; /* 过渡效果 */
+        }
+
+        .list-of-partners a:hover .partner-icon {
+            filter: brightness(0) saturate(100%) invert(35%) sepia(100%) saturate(600%) hue-rotate(193deg) brightness(100%) contrast(100%); /* 颜色滤镜调整，蓝色效果 */
+        }
+
+        .partner-icon {
+            width: 100%; /* 确保图标适应其容器的宽度 */
+            height: auto; /* 维持图标的比例 */
+        }
+
     </style>
 </head>
+
 <body>
-<header class="navbar">
-    <div class="user-info" id="user-info">
-        <!--        <img src="static/image/Monel.jpeg" alt="User Avatar" class="avatar">-->
-        <span id="username"></span>
-        <div class="dropdown">
-            <div class="dropdown-content">
-                <a href="#">User Settings</a>
-                <a href="#">Profile Details</a>
-            </div>
-        </div>
+<div class="navbar">
+    <a href="/">
+        <!--          src="https://learnblockchain.cn/article/9329">-->
+        <img alt="GetBlock.io" class="logo"
+             src="/static/image/dragon_icon.jpg">
+    </a>
+    <div class="nav-links">
+        <a href="/upload">上传</a>
+        <a href="/receive">签名</a>
+        <a href="/show">展示</a>
     </div>
-    <!-- 新增的登录/注册按钮 -->
     <div class="auth-buttons">
         <a href="/login" class="auth-button">登录</a>
         <a href="/register" class="auth-button">注册</a>
