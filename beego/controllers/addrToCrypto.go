@@ -45,16 +45,17 @@ func (c *AddrToCryptoController) PostUpload() {
 // receive->post
 func (c *AddrToCryptoController) PostReceive() {
 	var requestData struct {
-		CID           string `json:"cid"`
-		EncryptedText string `json:"encryptedText"`
+		//CID           string `json:"cid"`
+		//EncryptedText string `json:"encryptedText"`
 		SenderAddress string `json:"senderAddress"`
-		Signature     string `json:"signature"`
-		Digest        string `json:"digest"`
+		//Signature     string `json:"signature"`
+		//Digest        string `json:"digest"`
 	}
 
 	// 解析 JSON 数据
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &requestData)
 	if err != nil {
+		fmt.Println(err)
 		c.Ctx.Output.SetStatus(http.StatusBadRequest)
 		c.Ctx.Output.Body([]byte("Invalid JSON data"))
 		return
@@ -65,10 +66,10 @@ func (c *AddrToCryptoController) PostReceive() {
 
 	// 创建 FileInfo 实例并存储数据
 	addrToCryto := models.AddrToCrypto{
-		Address:     requestData.SenderAddress,
-		Cryptograph: requestData.EncryptedText,
-		DigestHash:  requestData.Digest,
-		Signature:   requestData.Signature,
+		Address: requestData.SenderAddress,
+		//Cryptograph: requestData.EncryptedText,
+		//DigestHash:  requestData.Digest,
+		//Signature:   requestData.Signature,
 	}
 
 	// 将数据插入到数据库

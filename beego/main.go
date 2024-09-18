@@ -10,7 +10,7 @@ import (
 
 func init() {
 	orm.RegisterDriver("mysql", orm.DRMySQL)
-	err := orm.RegisterDataBase("default", "mysql", "root:123456@tcp(127.0.0.1:3306)/eduSys_Database?charset=utf8")
+	err := orm.RegisterDataBase("default", "mysql", "root:040424tzh@tcp(127.0.0.1:3306)/eduSys_Database?charset=utf8")
 	if err != nil {
 		fmt.Println("register database error:", err)
 	}
